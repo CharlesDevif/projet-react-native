@@ -1,23 +1,17 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import Input from '../components/Input'
-import Buton from '../components/Buton'
-
+import { StyleSheet, View } from 'react-native'
+import LoginForm from '../components/auth/LoginForm'
+import RegisterForm from '../components/auth/RegisterForm'
 export default () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [form, setForm] = useState('login')
 
   return (
     <View style={styles.container}>
-      <Input placeholder="Email" value={email} onChange={setEmail} />
-      <Input placeholder="Password" value={password} onChange={setPassword} password />
-      <Buton text="Connexion" onClick={login} />
+      {
+        form === 'login' ? <LoginForm setForm={setForm} /> : <RegisterForm setForm={setForm} />
+      }
     </View>
   )
-
-  function login() {
-
-  }
 }
 
 const styles = StyleSheet.create({
