@@ -12,7 +12,7 @@ import Profile from './classes/Profile'
 
 export default function App() {
   const [profile, setProfile] = useState(null)
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => {
     if (user) {
       Profile.listenById(user.uid, res => {
         setProfile(res)
@@ -22,16 +22,9 @@ export default function App() {
     }
   })
 
-
-
   const Stack = createStackNavigator()
 
-
-
   return (
-    // <View style={styles.container}>
-    //   <Login />
-    // </View>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
