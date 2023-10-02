@@ -52,4 +52,3 @@ Pour soumettre votre projet, veuillez suivre ces étapes :
 - Alexandre Malvy
 - Morgan 
 
-N'hésitez pas à ajouter d'autres informations pertinentes à votre README.md en fonction des besoins spécifiques de votre projet. Bon travail !
