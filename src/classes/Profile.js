@@ -4,6 +4,7 @@ const db = getFirestore()
 const collectionName = 'profiles/'
 
 function docToInstance(document) {
+  // console.log(document.data().email)
   const data = document.data()
   return !data ? null : new Profile(document.id, data.email)
 }

@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
 import Login from './views/login'
+import Register from './views/register'
 import { auth } from './api/firebase'
 import Profile from './classes/Profile'
 
+
+
 export default function App() {
   const [profile, setProfile] = useState(null)
-
   auth.onAuthStateChanged(user => {
     if (user) {
       Profile.listenById(user.uid, res => {
@@ -17,16 +22,22 @@ export default function App() {
     }
   })
 
+
+
+  const Stack = createStackNavigator()
+
+
+
   return (
-    <View style={styles.container}>
-      <Login />
-    </View>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen  options={{ headerShown: false }} name="Acceuil" component={Home} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    // <View style={styles.container}>
+    //   <Login />
+    // </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
