@@ -12,10 +12,10 @@ import Profile from './classes/Profile'
 
 export default () => {
   const [profile, setProfile] = useState(null)
-  useEffect(() => {
-    auth.onAuthStateChanged(async user => {
+  useEffect(() => {                                 // sans ça react fait une boucle infini
+    auth.onAuthStateChanged(async user => {         // détection des changement de connexion
       if (user) {
-        Profile.listenById(user.uid, res => {
+        Profile.listenById(user.uid, res => {       // récupération du profile
           setProfile(res)
         })
       } else {
