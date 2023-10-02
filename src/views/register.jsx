@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import { View, TextInput, StyleSheet, StatusBar, Text } from "react-native";
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, StatusBar, TextInput} from 'react-native';
+import Button from '../components/Button';
 import { useNavigation } from "@react-navigation/native";
-import Button from "../components/Button";
 
-function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Register = () => {
 
-  const navigation = useNavigation();
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    
+    const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
         console.log("coucou");
       // Effectuer l'authentification ici
       // Si l'authentification réussit, rediriger l'utilisateur
-      navigation.navigate("Accueil"); // Remplacez 'Accueil' par le nom de votre écran principal
+      navigation.goBack(); // Remplacez 'Accueil' par le nom de votre écran principal
     } catch (error) {
       console.error("Erreur d'authentification : ", error);
     }
@@ -30,9 +31,8 @@ function Login() {
       console.error("Erreur d'authentification : ", error);
     }
   };
-
-  return (
-    <View style={styles.container}>
+    return (
+        <View style={styles.container}>
       <TextInput
         style={styles.inputText}
         placeholder="Nom d'utilisateur"
@@ -46,8 +46,8 @@ function Login() {
         onChangeText={(text) => setPassword(text)}
         secureTextEntry
       />
-      <Button text="Se connecter" onPress={handleLogin} />
-      <Text onPress={handleRegister}>Pas encore inscrit point d'interogation</Text>
+      <Button text="S'enregistrer" onPress={handleRegister} />
+      <Text onPress={handleLogin}>Déjà inscrit point d'interogation</Text>
     </View>
   );
 }
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;

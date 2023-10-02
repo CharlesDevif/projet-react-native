@@ -21,6 +21,12 @@ export default function App() {
     <View style={styles.container}>
       <Login />
     </View>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen name="Login" component={Login} />
+    //     <Stack.Screen  options={{ headerShown: false }} name="Acceuil" component={Home} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   )
 }
 
@@ -30,6 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    padding: Platform.OS === "android" ? StatusBar.currentHeight : 0
-  }
-})
+    padding: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+});
