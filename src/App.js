@@ -1,25 +1,23 @@
 import React, { useState } from 'react'
-// import { NavigationContainer } from '@react-navigation/native'
-// import { createStackNavigator } from '@react-navigation/stack'
-import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { StatusBar, StyleSheet, View } from 'react-native'
 import Login from './views/login'
-import Home from './views/acceuil'
-
-// const Stack = createStackNavigator()
+import { auth } from './api/firebase'
 
 export default function App() {
   const [profile, setProfile] = useState(null)
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+
+    } else {
+      setProfile(null)
+    }
+  })
 
   return (
     <View style={styles.container}>
       <Login />
     </View>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen  options={{ headerShown: false }} name="Acceuil" component={Home} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
   )
 }
 
