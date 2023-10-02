@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View, StyleSheet, Text } from 'react-native'
+import {View, StyleSheet, Text, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { createUserWithEmailAndPassword } from '@firebase/auth'
@@ -14,28 +14,29 @@ import Profile from '../classes/Profile'
 
 export default () => {
   const [email, setEmail] = useState('')
-  const [pass, setPass] = useState('')
+  const [password, setPass] = useState('')
   const [confirm, setConfirm] = useState('')
   const navigation = useNavigation()
 
   function register() {
     setEmail(email.trim())
 
-    if (email !== '' && pass.length >= 6 && pass === confirm) {
-      createUserWithEmailAndPassword(auth, email, pass)
+    if (email !== '') {
+      Alert.alert('Adresse email invalide.')
+    } else if (password !== confirm) {
+      Alert.alert('Les deux mots de passe doivent être identiques.')
+    } else if (password.length < 6) {
+      Alert.alert('Le mot de passe doit faire au moins 6 caractères.')
+    } else {
+      createUserWithEmailAndPassword(auth, email, password)
         .then(res => {
           const new_profile = new Profile(res.user.uid, email)
-
-          setEmail('')
-          setPass('')
-          setConfirm('')
-
           new_profile.add().then(() => {
             navigation.navigate('home')
           })
         })
         .catch((e) => {
-          console.warn(e)
+          Alert.alert(e.code)
         })
     }
   }
@@ -43,7 +44,7 @@ export default () => {
   return (
     <View style={styles.container}>
       <Input placeholder="Email" value={email} onChange={setEmail} />
-      <Input placeholder="Password" value={pass} onChange={setPass} passwordType />
+      <Input placeholder="Password" value={password} onChange={setPass} passwordType />
       <Input placeholder="Confirm password" value={confirm} onChange={setConfirm} passwordType />
       <Button text="S'enregistrer" onClick={register} />
       <Text>Déjà inscrit ? <Link text="Cliquez ici ?" onClick={() => navigation.goBack()} />.</Text>
