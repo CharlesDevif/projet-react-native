@@ -14,12 +14,12 @@ export default ({ setForm }) => {
       <Input placeholder="Email" value={email} onChange={setEmail} />
       <Input placeholder="Password" value={password} onChange={setPassword} password />
       <Input placeholder="Confirm password" value={confirm} onChange={setConfirm} password />
-      <Buton text="Register" onClick={login} />
+      <Buton text="Register" onClick={register} />
       <Text>Already have an account ? <Link text="Sign in" onClick={() => setForm('login')} />.</Text>
     </View>
   )
 
-  function login() {
+  function register() {
 
   }
 }
