@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 import Login from './views/login'
 import { auth } from './api/firebase'
+import Profile from './classes/Profile'
 
 export default function App() {
   const [profile, setProfile] = useState(null)
 
   auth.onAuthStateChanged(user => {
     if (user) {
-
+      Profile.listenById(user.uid, res => {
+        setProfile(res)
+      })
     } else {
       setProfile(null)
     }

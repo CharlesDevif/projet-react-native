@@ -33,7 +33,7 @@ export default ({ setForm }) => {
           setConfirm('')
         })
         .catch((e) => {
-          Alert.alert(e)
+          Alert.alert(JSON.stringify(e))
         })
     }
   }
