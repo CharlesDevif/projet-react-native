@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Input from '../Input'
-import Buton from '../Buton'
+import Buton from '../Button'
 import Link from '../Link'
 
 export default ({ setForm }) => {
