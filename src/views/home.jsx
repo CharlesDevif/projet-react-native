@@ -1,5 +1,7 @@
 import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 
+
+
 export default () => {
   return (
     <SafeAreaView style={styles.container}>

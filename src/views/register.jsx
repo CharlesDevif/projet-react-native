@@ -9,6 +9,7 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import Link from '../components/Link'
 import Profile from '../classes/Profile'
+import errorCodeToMessage from '../functions/errorCodeToMessage'
 
 
 
@@ -36,7 +37,7 @@ export default () => {
           })
         })
         .catch((e) => {
-          Alert.alert(e.code)
+          Alert.alert(errorCodeToMessage(e.code))
         })
     }
   }
