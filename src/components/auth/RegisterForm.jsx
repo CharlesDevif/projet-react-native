@@ -1,10 +1,13 @@
+import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth'
+
 import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Input from '../Input'
-import Buton from '../Buton'
+import Buton from '../Button'
 import Link from '../Link'
 
 export default ({ setForm }) => {
+  const auth = getAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -20,7 +23,15 @@ export default ({ setForm }) => {
   )
 
   function register() {
+    setEmail(email.trim())
 
+    if (email !== '' && password !== '' && password === confirm) {
+      createUserWithEmailAndPassword(auth, email, password).then(() => {
+        setEmail('')
+        setPassword('')
+        setConfirm('')
+      })
+    }
   }
 }
 
