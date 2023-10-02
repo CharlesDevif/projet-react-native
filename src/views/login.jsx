@@ -22,7 +22,7 @@ export default () => {
       <Input placeholder="Email" value={email} onChange={setEmail} />
       <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
       <Button onClick={login}>Se connecter</Button>
-      <Text>Pas encore inscrit ? <Link text="Cliquez ici" onClick={() => navigation.navigate('register')} />.</Text>
+      <Text>Pas encore inscrit ? <Link onClick={() => navigation.navigate('register')}>Cliquez ici</Link>.</Text>
       {/* TODO: remove this link */}
       <Link onClick={() => navigation.navigate('home')}>go to home</Link>
     </View>
