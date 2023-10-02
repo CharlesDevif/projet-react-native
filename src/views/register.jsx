@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View, StyleSheet, Text, Alert } from 'react-native'
+import {View, StyleSheet, Text, Alert, StatusBar } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { createUserWithEmailAndPassword } from '@firebase/auth'
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   }
 })

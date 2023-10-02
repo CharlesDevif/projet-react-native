@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, StyleSheet, Text } from "react-native"
+import { View, StyleSheet, Text, StatusBar } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 import Button from "../components/Button"
@@ -23,6 +23,8 @@ export default () => {
       <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
       <Button text="Se connecter" onClick={login} />
       <Text>Pas encore inscrit ? <Link text="Cliquez ici" onClick={() => navigation.navigate('register')} />.</Text>
+      {/* TODO: remove this link */}
+      <Link text="go to home" onClick={() => navigation.navigate('home')} />
     </View>
   )
 }
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   }
 })
