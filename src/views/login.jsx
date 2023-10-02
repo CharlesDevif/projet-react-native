@@ -21,10 +21,10 @@ export default () => {
     <View style={styles.container}>
       <Input placeholder="Email" value={email} onChange={setEmail} />
       <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
-      <Button text="Se connecter" onClick={login} />
+      <Button onClick={login}>Se connecter</Button>
       <Text>Pas encore inscrit ? <Link text="Cliquez ici" onClick={() => navigation.navigate('register')} />.</Text>
       {/* TODO: remove this link */}
-      <Link text="go to home" onClick={() => navigation.navigate('home')} />
+      <Link onClick={() => navigation.navigate('home')}>go to home</Link>
     </View>
   )
 }

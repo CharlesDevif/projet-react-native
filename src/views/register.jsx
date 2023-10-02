@@ -47,8 +47,8 @@ export default () => {
       <Input placeholder="Email" value={email} onChange={setEmail} />
       <Input placeholder="Password" value={password} onChange={setPass} passwordType />
       <Input placeholder="Confirm password" value={confirm} onChange={setConfirm} passwordType />
-      <Button text="S'enregistrer" onClick={register} />
-      <Text>Déjà inscrit ? <Link text="Cliquez ici ?" onClick={() => navigation.goBack()} />.</Text>
+      <Button onClick={register}>S'enregistrer</Button>
+      <Text>Déjà inscrit ? <Link onClick={() => navigation.goBack()}>Cliquez ici</Link>.</Text>
     </View>
   )
 }

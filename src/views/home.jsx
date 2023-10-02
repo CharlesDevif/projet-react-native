@@ -1,11 +1,14 @@
 import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 
+import Button from '../components/Button'
+
 
 
 export default () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>Home page !</Text>
+      <Button>Déconnexion</Button>
     </SafeAreaView>
   )
 }

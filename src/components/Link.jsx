@@ -1,8 +1,8 @@
 import { StyleSheet, Text } from 'react-native'
 
-export default ({ text, onClick }) => {
+export default ({ children, onClick }) => {
   return (
-    <Text onPress={onClick} style={styles.link}>{text}</Text>
+    <Text onPress={onClick} style={styles.link}>{children}</Text>
   )
 }
 

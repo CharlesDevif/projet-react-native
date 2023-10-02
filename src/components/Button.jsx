@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default ({ text, onClick }) => {
+export default ({ children, onClick }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onClick}>
       <View>
-        <Text>{text}</Text>
+        <Text>{children}</Text>
       </View>
     </TouchableOpacity>
   )
