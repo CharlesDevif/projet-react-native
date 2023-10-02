@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
-import {View, StyleSheet, Text, StatusBar, TextInput} from 'react-native'
+import {View, StyleSheet, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+
+import { createUserWithEmailAndPassword } from '@firebase/auth'
+import { auth } from '../api/firebase'
 
 import Button from '../components/Button'
 import Input from '../components/Input'
 import Link from '../components/Link'
+import Profile from '../classes/Profile'
 
 
 
@@ -19,13 +23,19 @@ export default () => {
 
     if (email !== '' && pass.length >= 6 && pass === confirm) {
       createUserWithEmailAndPassword(auth, email, pass)
-        .then(() => {
+        .then(res => {
+          const new_profile = new Profile(res.user.uid, email)
+
           setEmail('')
           setPass('')
           setConfirm('')
+
+          new_profile.add().then(() => {
+            navigation.navigate('home')
+          })
         })
         .catch((e) => {
-          Alert.alert(JSON.stringify(e))
+          console.warn(e)
         })
     }
   }

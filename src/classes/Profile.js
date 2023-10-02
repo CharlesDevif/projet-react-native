@@ -1,4 +1,4 @@
-import { getFirestore, doc, onSnapshot, getDoc } from 'firebase/firestore'
+import { getFirestore, doc, onSnapshot, getDoc, setDoc } from 'firebase/firestore'
 
 const db = getFirestore()
 const collectionName = 'profiles/'
@@ -18,5 +18,13 @@ export default class Profile {
     return onSnapshot(doc(db, collectionName, id), snapshot => {
       callback(docToInstance(snapshot))
     })
+  }
+
+  async add() {
+    const new_profile = {
+      email: this.email
+    }
+
+    await setDoc(doc(db, collectionName, this.id), new_profile)
   }
 }

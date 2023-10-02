@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Login from './views/login'
 import Register from './views/register'
+import Home from './views/home'
 import { auth } from './api/firebase'
 import Profile from './classes/Profile'
 
@@ -29,6 +30,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
+        <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
