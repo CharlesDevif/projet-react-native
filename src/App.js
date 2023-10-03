@@ -11,9 +11,6 @@ import login from './views/login'
 import register from './views/register'
 import home from './views/home'
 import profile from './views/profile'
-import Board from './components/Board'
-import Card from './components/Card'
-import Column from './components/Column'
 
 export default () => {
   const [profile, setProfile] = useState(null)
@@ -51,6 +48,4 @@ const isAuth =
 <Tab.Navigator>
   <Tab.Screen name="WorkSpace" component={home} />
   <Tab.Screen name="Profil" component={profile} />
-  <Tab.Screen name="Board" component={Board} options={{ headerShown: false }} />
-  <Tab.Screen name="Card" component={Card} options={{ headerShown: false }} />
 </Tab.Navigator>
