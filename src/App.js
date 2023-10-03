@@ -11,6 +11,7 @@ import LoginView from './views/login'
 import RegisterView from './views/register'
 import HomeView from './views/home'
 import ProfileView from './views/profile'
+import addContentView from './views/addContent'
 
 export default () => {
   const [profile, setProfile] = useState(null)
@@ -51,5 +52,6 @@ const notAuth =
 const isAuth =
 <Tab.Navigator>
   <Tab.Screen name="WorkSpace" component={HomeView} />
+  <Tab.Screen name="+" component={addContentView} />
   <Tab.Screen name="Profil" component={ProfileView} />
 </Tab.Navigator>

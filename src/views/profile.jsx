@@ -12,8 +12,9 @@ export default () => {
   }
 
   function deleteAccount() {
-    firebaseUser.delete()
     profile.delete()
+    firebaseUser.delete()
+    auth.signOut()
   }
 
   return (
