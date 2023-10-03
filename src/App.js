@@ -7,9 +7,10 @@ import { auth } from './api/firebase'
 import AppContext from './context'
 
 import Profile from './classes/Profile'
-import Login from './views/login'
-import Register from './views/register'
-import Home from './views/home'
+import login from './views/login'
+import register from './views/register'
+import home from './views/home'
+import profile from './views/profile'
 
 export default () => {
   const [profile, setProfile] = useState(null)
@@ -34,18 +35,17 @@ export default () => {
   )
 }
 
-
-
 const Stack = createStackNavigator()
 const Tab = createMaterialBottomTabNavigator()
 
 const notAuth =
 <Stack.Navigator>
-  <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
-  <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
+  <Stack.Screen name="login" component={login} options={{ headerShown: false }} />
+  <Stack.Screen name="register" component={register} options={{ headerShown: false }} />
 </Stack.Navigator>
 
 const isAuth =
 <Tab.Navigator>
-  <Tab.Screen name="home" component={Home} options={{ headerShown: false }} />
+  <Tab.Screen name="home" component={home} />
+  <Tab.Screen name="Profil" component={profile} />
 </Tab.Navigator>

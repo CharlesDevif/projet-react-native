@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   }
 })
