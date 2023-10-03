@@ -1,6 +1,7 @@
 import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 import { useContext } from 'react'
 import Board from "../components/Board"
+import Button from '../components/Layout/Button'
 
 
 export default () => {
@@ -9,8 +10,10 @@ export default () => {
 
 
     function addContent() {
-        
-      }
+      
+        const new_board = new Board(name, user.uid)
+        new_board.add()
+    }
 
   return (
     <View style={styles.container}>
