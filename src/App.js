@@ -14,20 +14,24 @@ import ProfileView from './views/profile'
 
 export default () => {
   const [profile, setProfile] = useState(null)
+  const [firebaseUser, setFirebaseUser] = useState(null)
+
   useEffect(() => {                                 // sans ça react fait une boucle infini
     auth.onAuthStateChanged(async user => {         // détection des changement de connexion
       if (user) {
+        setFirebaseUser(user)                       // récupération du firebaseUser
         Profile.listenById(user.uid, res => {       // récupération du profile
           setProfile(res)
         })
       } else {
         setProfile(null)
+        setFirebaseUser(null)
       }
     })
   }, [])
 
   return (
-    <AppContext.Provider value={{ profile, setProfile }}>
+    <AppContext.Provider value={{ auth, firebaseUser, profile, setProfile }}>
       <NavigationContainer>
         { profile ? isAuth : notAuth }
       </NavigationContainer>

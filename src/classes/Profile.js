@@ -1,4 +1,4 @@
-import { getFirestore, doc, onSnapshot, getDoc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore'
 
 const db = getFirestore()
 const collectionName = 'profiles/'
@@ -26,5 +26,9 @@ export default class Profile {
     }
 
     await setDoc(doc(db, collectionName, this.id), new_profile)
+  }
+
+  async delete() {
+    await deleteDoc(doc(db, collectionName, this.id))
   }
 }
