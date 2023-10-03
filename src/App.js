@@ -8,6 +8,8 @@ import Home from './views/home'
 import { auth } from './api/firebase'
 import Profile from './classes/Profile'
 
+import TrelloContext from './context'
+
 
 
 export default () => {
@@ -27,14 +29,15 @@ export default () => {
   const Stack = createStackNavigator()
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
-        <Stack.Screen name="home" component={Home} options={{ headerShown: false }}
-          profile={profile} setProfile={setProfile}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <TrelloContext.Provider value={{ profile, setProfile }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
+
+          <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </TrelloContext.Provider>
   )
 }

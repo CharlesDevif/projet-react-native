@@ -1,13 +1,18 @@
 import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 
 import { auth } from '../api/firebase'
+import TrelloContext from '../context'
 
 import Button from '../components/Button'
 import { useNavigation } from '@react-navigation/core'
+import { useContext } from 'react'
 
 
 
-export default ({ profile, setProfile }) => {
+export default () => {
+  const {profile, setProfile} = useContext(TrelloContext)
+
+
   const navigation = useNavigation()
   function logout() {
     auth.signOut()
