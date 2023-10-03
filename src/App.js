@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
 import { auth } from './api/firebase'
 import AppContext from './context'
@@ -9,8 +10,6 @@ import Profile from './classes/Profile'
 import Login from './views/login'
 import Register from './views/register'
 import Home from './views/home'
-
-const Stack = createStackNavigator()
 
 export default () => {
   const [profile, setProfile] = useState(null)
@@ -30,13 +29,15 @@ export default () => {
     <AppContext.Provider value={{ profile, setProfile }}>
       <NavigationContainer>
         { profile ? isAuth : notAuth }
-        {/* { notAuth } */}
       </NavigationContainer>
     </AppContext.Provider>
   )
 }
 
 
+
+const Stack = createStackNavigator()
+const Tab = createMaterialBottomTabNavigator()
 
 const notAuth =
 <Stack.Navigator>
@@ -45,6 +46,6 @@ const notAuth =
 </Stack.Navigator>
 
 const isAuth =
-<Stack.Navigator>
-  <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
-</Stack.Navigator>
+<Tab.Navigator>
+  <Tab.Screen name="home" component={Home} options={{ headerShown: false }} />
+</Tab.Navigator>
