@@ -1,3 +1,3 @@
 import React from 'react'
 
-export default TrelloContext = React.createContext({})
+export default AppContext = React.createContext({})

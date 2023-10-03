@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { auth } from './api/firebase'
-import TrelloContext from './context'
+import AppContext from './context'
 
 import Profile from './classes/Profile'
 import Login from './views/login'
@@ -27,11 +27,11 @@ export default () => {
   }, [])
 
   return (
-    <TrelloContext.Provider value={{ profile, setProfile }}>
+    <AppContext.Provider value={{ profile, setProfile }}>
       <NavigationContainer>
         { profile ? isAuth : notAuth }
       </NavigationContainer>
-    </TrelloContext.Provider>
+    </AppContext.Provider>
   )
 }
 

@@ -1,7 +1,7 @@
 import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 
 import { auth } from '../api/firebase'
-import TrelloContext from '../context'
+import AppContext from '../context'
 
 import Button from '../components/Button'
 import { useNavigation } from '@react-navigation/core'
@@ -10,7 +10,7 @@ import { useContext } from 'react'
 
 
 export default () => {
-  const {profile, setProfile} = useContext(TrelloContext)
+  const {profile, setProfile} = useContext(AppContext)
 
 
   const navigation = useNavigation()

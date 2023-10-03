@@ -22,7 +22,7 @@ export default () => {
   function register() {
     setEmail(email.trim())
 
-    if (email !== '') {
+    if (email === '') {
       Alert.alert('Adresse email invalide.')
     } else if (password !== confirm) {
       Alert.alert('Les deux mots de passe doivent être identiques.')

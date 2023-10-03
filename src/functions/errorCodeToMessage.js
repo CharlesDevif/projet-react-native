@@ -1,7 +1,7 @@
 export default code => {
   switch (code) {
     case 'auth/invalid-email':
-      return 'Email invalide.'
+      return 'Adresse email invalide.'
     case 'auth/user-not-found':
       return 'Email ou mot de passe incorrecte.'
     case 'auth/wrong-password':
