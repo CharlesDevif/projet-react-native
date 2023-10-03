@@ -10,7 +10,7 @@ import Login from './views/login'
 import Register from './views/register'
 import Home from './views/home'
 
-
+const Stack = createStackNavigator()
 
 export default () => {
   const [profile, setProfile] = useState(null)
@@ -30,18 +30,21 @@ export default () => {
     <AppContext.Provider value={{ profile, setProfile }}>
       <NavigationContainer>
         { profile ? isAuth : notAuth }
+        {/* { notAuth } */}
       </NavigationContainer>
     </AppContext.Provider>
   )
 }
 
-const Stack = createStackNavigator()
 
-const notAuth = <Stack.Navigator>
+
+const notAuth =
+<Stack.Navigator>
   <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
   <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
 </Stack.Navigator>
 
-const isAuth = <Stack.Navigator>
+const isAuth =
+<Stack.Navigator>
   <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
 </Stack.Navigator>

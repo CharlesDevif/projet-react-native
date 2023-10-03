@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native'
 import { createUserWithEmailAndPassword } from '@firebase/auth'
 import { auth } from '../api/firebase'
 
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Link from '../components/Link'
+import Button from '../components/Layout/Button'
+import Input from '../components/Layout/Input'
+import Link from '../components/Layout/Link'
 import Profile from '../classes/Profile'
 import errorCodeToMessage from '../functions/errorCodeToMessage'
 
@@ -32,9 +32,7 @@ export default () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then(res => {
           const new_profile = new Profile(res.user.uid, email)
-          new_profile.add().then(() => {
-            navigation.navigate('home')
-          })
+          new_profile.add()
         })
         .catch((e) => {
           Alert.alert(errorCodeToMessage(e.code))

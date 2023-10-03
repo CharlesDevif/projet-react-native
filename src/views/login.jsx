@@ -5,9 +5,9 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../api/firebase'
 
 import errorCodeToMessage from '../functions/errorCodeToMessage'
-import Button from "../components/Button"
-import Input from '../components/Input'
-import Link from '../components/Link'
+import Button from "../components/Layout/Button"
+import Input from '../components/Layout/Input'
+import Link from '../components/Layout/Link'
 
 
 
@@ -18,9 +18,6 @@ export default () => {
 
   const login = async () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.navigate('home')
-      })
       .catch(e => {
         Alert.alert(errorCodeToMessage(e.code))
       })
@@ -32,8 +29,6 @@ export default () => {
       <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
       <Button onClick={login}>Se connecter</Button>
       <Text>Pas encore inscrit ? <Link onClick={() => navigation.navigate('register')}>Cliquez ici</Link>.</Text>
-      {/* TODO: remove this link */}
-      <Link onClick={() => navigation.navigate('home')}>go to home</Link>
     </View>
   )
 }

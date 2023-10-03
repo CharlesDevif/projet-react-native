@@ -3,7 +3,7 @@ import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
 import { auth } from '../api/firebase'
 import AppContext from '../context'
 
-import Button from '../components/Button'
+import Button from '../components/Layout/Button'
 import { useNavigation } from '@react-navigation/core'
 import { useContext } from 'react'
 
@@ -11,13 +11,11 @@ import { useContext } from 'react'
 
 export default () => {
   const {profile, setProfile} = useContext(AppContext)
-
-
   const navigation = useNavigation()
   function logout() {
     auth.signOut()
-    navigation.navigate('login')
-    setProfile(null)
+
+
   }
 
   return (
