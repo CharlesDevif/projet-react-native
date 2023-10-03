@@ -1,7 +1,10 @@
 import React, { useState } from "react"
-import { View, StyleSheet, Text, StatusBar } from "react-native"
+import { View, StyleSheet, Text, StatusBar, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../api/firebase'
 
+import errorCodeToMessage from '../functions/errorCodeToMessage'
 import Button from "../components/Button"
 import Input from '../components/Input'
 import Link from '../components/Link'
@@ -14,7 +17,13 @@ export default () => {
   const navigation = useNavigation()
 
   const login = async () => {
-    console.log('login') //TODO: login method
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.navigate('home')
+      })
+      .catch(e => {
+        Alert.alert(errorCodeToMessage(e.code))
+      })
   }
 
   return (

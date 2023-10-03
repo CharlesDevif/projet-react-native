@@ -8,6 +8,8 @@ export default code => {
       return 'Email ou mot de passe incorrecte.'
     case 'auth/user-disabled':
       return 'Vous avez été banni, veuillez contacter un administrateur.'
+    case 'auth/invalid-login-credentials':
+      return 'Email ou mot de passe incorrecte.'
     default:
       return code
   }
