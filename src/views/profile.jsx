@@ -6,6 +6,10 @@ import Button from '../components/Layout/Button'
 
 export default () => {
   const {auth, firebaseUser, profile} = useContext(AppContext)
+  
+  function signOut() {
+    auth.signOut()
+  }
 
   function deleteAccount() {
     firebaseUser.delete()
@@ -14,7 +18,7 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Button onClick={auth.signOut}>Déconnexion</Button>
+      <Button onClick={signOut}>Déconnexion</Button>
       <Button error onClick={deleteAccount}>Suppriemr le compte</Button>
     </View>
   )
