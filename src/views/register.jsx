@@ -40,6 +40,10 @@ export default () => {
     }
   }
 
+  function loginWithGoogle() {
+    Alert.alert(`WIP - "signInWithPopup" n'est pas utilisable en react Native.`)
+  }
+
   return (
     <View style={styles.container}>
       <Input placeholder="Email" value={email} onChange={setEmail} />
@@ -47,6 +51,8 @@ export default () => {
       <Input placeholder="Confirm password" value={confirm} onChange={setConfirm} passwordType />
       <Button onClick={register}>S'enregistrer</Button>
       <Text>Déjà inscrit ? <Link onClick={() => navigation.goBack()}>Cliquez ici</Link>.</Text>
+      <Text>Ou</Text>
+      <Button warning onClick={loginWithGoogle}>Se connecter avec Google</Button>
     </View>
   )
 }

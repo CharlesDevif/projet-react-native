@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { View, StyleSheet, Text, StatusBar, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import { auth } from '../api/firebase'
 
 import errorCodeToMessage from '../functions/errorCodeToMessage'
@@ -16,11 +16,21 @@ export default () => {
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
 
-  const login = async () => {
+  function login() {
     signInWithEmailAndPassword(auth, email, password)
       .catch(e => {
         Alert.alert(errorCodeToMessage(e.code))
       })
+  }
+
+  function loginWithGoogle() {
+    Alert.alert(`WIP - "signInWithPopup" n'est pas utilisable en react Native.`)
+    // const provider = new GoogleAuthProvider()
+
+    // signInWithPopup(auth, provider)
+    //   .catch((e) => {
+    //     Alert.alert(errorCodeToMessage(e.code))
+    //   })
   }
 
   return (
@@ -29,6 +39,8 @@ export default () => {
       <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
       <Button onClick={login}>Se connecter</Button>
       <Text>Pas encore inscrit ? <Link onClick={() => navigation.navigate('register')}>Cliquez ici</Link>.</Text>
+      <Text>Ou</Text>
+      <Button warning onClick={loginWithGoogle}>Se connecter avec Google</Button>
     </View>
   )
 }

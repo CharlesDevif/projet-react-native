@@ -1,11 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default ({ children, onClick, error, success }) => {
+export default ({ children, onClick, success, warning, error }) => {
   return (
     <TouchableOpacity onPress={onClick} style={[
       styles.button,
-      (error ? styles.error : null),
-      (success ? styles.success : null)
+      (success ? styles.success : null),
+      (warning ? styles.warning : null),
+      (error ? styles.error : null)
     ]}>
       <View>
         <Text>{children}</Text>
@@ -21,10 +22,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8
   },
+  success: {
+    backgroundColor: 'hsl(90, 50%, 50%)'
+  },
+  warning: {
+    backgroundColor: 'hsl(30, 75%, 50%)'
+  },
   error: {
     backgroundColor: 'hsl(0, 50%, 50%)'
-  },
-  success: {
-    backgroundColor: 'hsl(150, 50%, 50%)'
   }
 })
