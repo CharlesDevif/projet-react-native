@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, query, updateDoc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 
 const db = getFirestore()
 const collectionName = 'boards/'
