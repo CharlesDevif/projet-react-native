@@ -25,7 +25,7 @@ export default () => {
         <View style={styles.boardsContainer}>
           { boards.map(board => <BoardView key={board.id} board={board} />)}
         </View>
-        <AddContentMenu  toggleMenu={isMenuModalOpen} />
+        <AddContentMenu toggleMenu={isMenuModalOpen} />
       </View>
     </TouchableWithoutFeedback>
   )
