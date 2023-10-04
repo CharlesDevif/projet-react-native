@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 
 import AppContext from '../context'
@@ -10,24 +10,32 @@ export default () => {
   const { profile } = useContext(AppContext)
   const [boards, setBoards] = useState([])
 
-  const [isMenuModalOpen, setMenuModalOpen] = useState(false)
-
-  Board.listenByOwner(profile.id, res => {
-    setBoards(res)
-  })
+    // Appelle cette fonction lorsque tu veux récupérer les boards
+    const fetchBoards = () => {
+      Board.listenByOwner(profile.id, (res) => {
+        setBoards(res);
+      });
+    };
+  
+    // Utilise useEffect pour appeler fetchBoards au montage du composant
+    useEffect(() => {
+      fetchBoards();
+    }, []);
   return (
-    <TouchableWithoutFeedback onPress={() => setMenuModalOpen(!isMenuModalOpen)}>
+   
       <View style={styles.container}>
         <StatusBar style="light" />
         <Text style={styles.headerListeBoard}>
           { profile ? `Espace de travail de : ${profile.email}` : 'Déconnecté' }
         </Text>
         <View style={styles.boardsContainer}>
-          { boards.map(board => <BoardView key={board.id} board={board} />)}
-        </View>
-        <AddContentMenu  toggleMenu={isMenuModalOpen} />
+        {boards.map((board) => (
+          <BoardView key={board.id} board={board} />
+        ))}
       </View>
-    </TouchableWithoutFeedback>
+        <AddContentMenu/>
+      </View>
+
   )
 }
 
