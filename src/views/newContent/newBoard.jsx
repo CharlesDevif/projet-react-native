@@ -7,7 +7,7 @@ import Board from '../../classes/Board'
 import { Button, Input } from '../../components/layout'
 
 export default () => {
-  const { profile } = useContext(AppContext)
+  const { profile, setCurrentBoard } = useContext(AppContext)
   const [name, setName] = useState('')
   const navigation = useNavigation()
 
@@ -17,6 +17,9 @@ export default () => {
       .then(() => {
         Alert.alert(`Tableau ${name} créé.`)
         navigation.goBack()
+
+        setCurrentBoard(new_board)
+        navigation.navigate('boardView')
       })
       .catch((e) => {
         Alert.alert(e.code)

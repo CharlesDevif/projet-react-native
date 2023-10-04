@@ -7,11 +7,17 @@ import AddContentMenu from '../components/AddContentModal'
 import BoardElement from '../components/content/Board'
 
 export default () => {
-  const { profile, boards, setBoards } = useContext(AppContext)
+  const { profile, boards, setBoards, setCurrentBoard } = useContext(AppContext)
 
   useEffect(() => {
     Board.listenByOwner(profile.id, res => {
       setBoards(res)
+      const currentBoard = res.find(b => b.id === profile.currentBoard)
+      if (currentBoard) {
+        setCurrentBoard(currentBoard)
+      } else if (res.length > 0) {
+        setCurrentBoard(res[0])
+      }
     })
   }, [])
 
