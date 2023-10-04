@@ -3,7 +3,7 @@ import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableWithoutFeedback, Vi
 
 import AppContext from '../context'
 import Board from '../classes/Board'
-import AddContentMenu from '../components/AddContentMenu'
+import AddContentMenu from '../components/AddContentModal'
 import BoardView from '../components/content/Board'
 
 export default () => {

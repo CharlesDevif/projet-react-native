@@ -12,7 +12,7 @@ export default (toggleMenu) => {
     setMenuModal(false)
   }, [toggleMenu])
 
- 
+
 
   return (
     <TouchableWithoutFeedback onPress={() => setMenuModal(false)}>
