@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View, } from 'react-native'
+import React, { useState } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import ButtonWorkspace from './layout/ButtonWorkspace'
@@ -8,8 +8,13 @@ export default () => {
   const [menuModal, setMenuModal] = useState(false)
   const navigation = useNavigation()
 
+  // Fonction pour fermer le menu modal lorsque l'utilisateur clique en dehors
+  const closeMenuModal = () => {
+    setMenuModal(false)
+  }
+
   return (
-    <>
+    <TouchableWithoutFeedback onPress={closeMenuModal}>
       <View style={styles.containerButtonAdd}>
         {menuModal &&
           <View style={styles.buttonOverlayContainer}>
@@ -29,14 +34,11 @@ export default () => {
         }
         <ButtonWorkspace onClick={() => setMenuModal(!menuModal)}>+</ButtonWorkspace>
       </View>
-
-      {menuModal && <View style={styles.overlay} />}
-    </>
+    </TouchableWithoutFeedback>
   )
 }
 
 const styles = StyleSheet.create({
-   
     containerButtonAdd: {
       position: "absolute",
       alignItems: "flex-end",
@@ -44,17 +46,6 @@ const styles = StyleSheet.create({
       bottom: 20,
       right: 20,
       zIndex: 2,
-    },
-    overlay: {
-      position: "absolute",
-      backgroundColor: "rgba(0, 0, 0, 0.3)",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: "flex-end",
-      alignItems: "flex-end",
-      zIndex: 1,
     },
     buttonOverlayContainer: {
       width: "50%",
@@ -80,4 +71,3 @@ const styles = StyleSheet.create({
       color: "#f4f4f4"
     }
   })
-  
