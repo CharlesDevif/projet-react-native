@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { Alert, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, } from 'react-native'
 
 import AppContext from '../context'
 import ButtonWorkspace from '../components/Layout/ButtonWorkspace'
-import Board from '../classes/Board'
 import { useNavigation } from '@react-navigation/native'
 
 export default () => {
@@ -11,16 +10,6 @@ export default () => {
   const [menuModal, setMenuModal] = useState(false)
 
   const navigation = useNavigation()
-  // function createBoard() {
-  //   const new_board = new Board(null, 'un super nom', profile.id)
-  //   new_board.save()
-  //     .then(() => {
-  //       Alert.alert('Tableau créé')
-  //     })
-  //     .catch((e) => {
-  //       Alert.alert(e.code)
-  //     })
-  // }
 
   return (
     <>
