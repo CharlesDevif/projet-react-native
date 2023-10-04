@@ -4,6 +4,7 @@ import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import AppContext from '../context'
 import Board from '../classes/Board'
 import AddContentMenu from '../components/AddContentMenu'
+import BoardView from '../components/content/Board'
 
 export default () => {
   const { profile } = useContext(AppContext)
@@ -20,14 +21,8 @@ export default () => {
         <Text style={styles.headerListeBoard}>
           { profile ? `Espace de travail de : ${profile.email}` : 'Déconnecté' }
         </Text>
-        <View>
-          {
-            boards.map(board => {
-              return (
-                <Text key={board.id}>{board.name}</Text>
-              )
-            })
-          }
+        <View style={styles.boardsContainer}>
+          { boards.map(board => <BoardView key={board.id} board={board} />)}
         </View>
       </SafeAreaView>
       <AddContentMenu />
@@ -46,5 +41,11 @@ const styles = StyleSheet.create({
     color: "#ffff",
     backgroundColor: "#000000",
     textAlign: 'center'
+  },
+
+  boardsContainer: {
+    padding: 16,
+    gap: 16,
+    borderRadius : 85,
   }
 })
