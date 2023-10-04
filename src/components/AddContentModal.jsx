@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-import ButtonWorkspace from './tmp_layout/ButtonWorkspace'
+import ButtonWorkspace from './layout/ButtonWorkspace'
 
 export default (toggleMenu) => {
   const [menuModal, setMenuModal] = useState(false)
