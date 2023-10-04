@@ -1,27 +1,27 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useContext } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-import HomeView from "../views/home";
-import ProfileView from "../views/profile";
+import AppContext from '../context'
+import HomeView from '../views/home'
+import ProfileView from '../views/profile'
 import boardView from '../views/content/board'
+import newBoardView from '../views/newContent/newBoard'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 const CustomTabBarIcon = ({ iconSource, focused, name }) => {
   return (
     <View style={styles.tabIconContainer}>
       <Image source={iconSource} style={styles.tabIcon} />
-      <Text
-        style={[styles.tabText, { color: focused ? "#4bce98" : "#F4F4F4" }]}
-      >
-        {name}
-      </Text>
+      <Text style={[styles.tabText, { color: focused ? "#4bce98" : "#F4F4F4" }]}>{name}</Text>
     </View>
-  );
-};
+  )
+}
 
-const AppNavigator = () => {
+export default () => {
+  const { currentBoard } = useContext(AppContext)
+
   return (
     <Tab.Navigator
       initialRouteName="WorkSpace"
@@ -54,7 +54,7 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="boardView"
-        component={boardView}
+        component={currentBoard ? boardView : newBoardView}
         options={{
           tabBarLabel: "", 
           tabBarIcon: ({ focused }) => (
@@ -81,8 +81,8 @@ const AppNavigator = () => {
         }}
       />
     </Tab.Navigator>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   tabIconContainer: {
@@ -96,6 +96,4 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 12,
   },
-});
-
-export default AppNavigator;
+})

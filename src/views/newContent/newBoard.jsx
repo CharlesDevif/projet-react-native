@@ -12,10 +12,10 @@ export default () => {
   const navigation = useNavigation()
 
   function createBoard() {
-    const new_board = new Board(null, name, profile.id)
+    const new_board = new Board(null, name, profile.id, [])
     new_board.save()
       .then(() => {
-        Alert.alert(`Tableau ${name} créé.`)
+        Alert.alert(`Tableau "${name}" créé.`)
         navigation.goBack()
 
         setCurrentBoard(new_board)

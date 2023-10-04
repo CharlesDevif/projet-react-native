@@ -8,6 +8,11 @@ export default () => {
   const [menuModal, setMenuModal] = useState(false)
   const navigation = useNavigation()
 
+  function redirect(to) {
+    navigation.navigate(to)
+    setMenuModal(false)
+  }
+
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setMenuModal(false)}>
@@ -15,15 +20,17 @@ export default () => {
           {menuModal && (
             <>
 
-              <TouchableOpacity style={styles.buttonOverlay}>
-                <Text style={styles.textOverlay}>Carte</Text>
+              <TouchableOpacity style={styles.buttonOverlay}
+                onPress={() => redirect('newCard')}
+              >
+                <Text style={styles.textOverlay}>Tâche</Text>
                 <View style={styles.imageOverlay}>
                   <Image source={require('../assets/imgs/Home.png')} />
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.buttonOverlay}
-                onPress={() => navigation.navigate('newColumn')}
+                onPress={() => redirect('newColumn')}
               >
                 <Text style={styles.textOverlay}>Colonne</Text>
                 <View style={styles.imageOverlay}>
@@ -31,9 +38,8 @@ export default () => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.buttonOverlay}
-                onPress={() => navigation.navigate('newBoard')}
+              <TouchableOpacity style={styles.buttonOverlay}
+                onPress={() => redirect('newBoard')}
               >
                 <Text style={styles.textOverlay}>Tableau</Text>
                 <View style={styles.imageOverlay}>
