@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
   boardsContainer: {
     padding: 16,
     gap: 16,
-    borderRadius : 85,
+    borderRadius : 8,
   }
 })
