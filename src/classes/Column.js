@@ -26,6 +26,7 @@ export default class Column {
       callback(list)
     })
   }
+
   async save() {
     const new_column = {
       board: this.board,
@@ -39,7 +40,6 @@ export default class Column {
       this.id = res.id
     }
   }
-
   async delete() {
     await deleteDoc(doc(db, collectionName, this.id))
   }

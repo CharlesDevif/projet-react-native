@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 import HomeView from "../views/home";
 import ProfileView from "../views/profile";
+import boardView from '../views/content/board'
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +48,20 @@ const AppNavigator = () => {
               iconSource={require("../assets/imgs/Home.png")}
               focused={focused}
               name="Espace de travail"
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="boardView"
+        component={boardView}
+        options={{
+          tabBarLabel: "", 
+          tabBarIcon: ({ focused }) => (
+            <CustomTabBarIcon
+              iconSource={require("../assets/imgs/Home.png")}
+              focused={focused}
+              name="Tableau"
             />
           ),
         }}

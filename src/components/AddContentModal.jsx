@@ -14,12 +14,14 @@ export default () => {
         <View style={[styles.containerButtonAdd, menuModal && styles.open]}>
           {menuModal && (
             <>
+
               <TouchableOpacity style={styles.buttonOverlay}>
                 <Text style={styles.textOverlay}>Carte</Text>
                 <View style={styles.imageOverlay}>
                   <Image source={require('../assets/imgs/Home.png')} />
                 </View>
               </TouchableOpacity>
+
               <TouchableOpacity style={styles.buttonOverlay}
                 onPress={() => navigation.navigate('newColumn')}
               >
@@ -28,15 +30,17 @@ export default () => {
                   <Image source={require('../assets/imgs/Home.png')} />
                 </View>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.buttonOverlay}
-                onPress={() => navigation.navigate('newTab')}
+                onPress={() => navigation.navigate('newBoard')}
               >
                 <Text style={styles.textOverlay}>Tableau</Text>
                 <View style={styles.imageOverlay}>
                   <Image source={require('../assets/imgs/Home.png')} />
                 </View>
               </TouchableOpacity>
+
             </>
           )}
           <ButtonWorkspace onClick={() => setMenuModal(!menuModal)}>+</ButtonWorkspace>

@@ -3,10 +3,10 @@ import { Alert, StyleSheet, Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import SelectDropdown from 'react-native-select-dropdown'
 
-import AppContext from '../context'
-import Column from '../classes/Column'
-import { Button, Input } from '../components/layout'
-import errorCodeToMessage from '../functions/errorCodeToMessage'
+import AppContext from '../../context'
+import Column from '../../classes/Column'
+import { Button, Input } from '../../components/layout'
+import errorCodeToMessage from '../../functions/errorCodeToMessage'
 
 export default () => {
   const { boards } = useContext(AppContext)

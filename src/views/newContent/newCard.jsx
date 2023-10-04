@@ -1,10 +1,9 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Alert, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-import AppContext from '../context'
-import Card from '../classes/Card'
-import { Button, Input } from '../components/layout'
+import Card from '../../classes/Card'
+import { Button, Input } from '../../components/layout'
 
 export default () => {
   const [name, setName] = useState('')

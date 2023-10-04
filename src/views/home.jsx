@@ -4,7 +4,7 @@ import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import AppContext from '../context'
 import Board from '../classes/Board'
 import AddContentMenu from '../components/AddContentModal'
-import BoardView from '../components/content/Board'
+import BoardElement from '../components/content/Board'
 
 export default () => {
   const { profile, boards, setBoards } = useContext(AppContext)
@@ -22,7 +22,7 @@ export default () => {
         { profile ? `Espace de travail de : ${profile.email}` : 'Déconnecté' }
       </Text>
       <View style={styles.boardsContainer}>
-        { boards.map(board => <BoardView key={board.id} board={board} />) }
+        { boards.map(board => <BoardElement key={board.id} board={board} />) }
       </View>
       <AddContentMenu/>
     </View>

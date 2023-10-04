@@ -6,10 +6,12 @@ import { auth } from './api/firebase'
 import AppContext from './context'
 
 import Profile from './classes/Profile'
-import LoginView from './views/login'
-import RegisterView from './views/register'
-import newBoard from './views/newBoard'
-import newColumn from './views/newColumn'
+
+import loginView from './views/login'
+import registerView from './views/register'
+import newBoard from './views/newContent/newBoard'
+import newColumn from './views/newContent/newColumn'
+
 import AppNavigator from './components/AppTabNavigator'
 import Loader from './components/Loader'
 
@@ -20,6 +22,7 @@ export default () => {
   const [profile, setProfile] = useState(null)
   const [firebaseUser, setFirebaseUser] = useState(null)
   const [boards, setBoards] = useState([])
+  const [currentBoard, setCurrentBoard] = useState(null)
 
   useEffect(() => {                                 // sans ça react fait une boucle infini
     auth.onAuthStateChanged(async user => {         // détection des changement de connexion
@@ -41,7 +44,8 @@ export default () => {
     <AppContext.Provider value={{
       auth, firebaseUser,
       profile, setProfile,
-      boards, setBoards
+      boards, setBoards,
+      currentBoard, setCurrentBoard
     }}>
       <NavigationContainer>
         { loading ? <Loader /> : profile ? isAuth : notAuth }
@@ -53,14 +57,14 @@ export default () => {
 const Stack = createStackNavigator()
 const notAuth =
 <Stack.Navigator>
-  <Stack.Screen name="login" component={LoginView} options={{ headerShown: false }} />
-  <Stack.Screen name="register" component={RegisterView} options={{ headerShown: false }} />
+  <Stack.Screen name="login" component={loginView} options={{ headerShown: false }} />
+  <Stack.Screen name="register" component={registerView} options={{ headerShown: false }} />
 </Stack.Navigator>
 
 const AppStack = createStackNavigator()
 const isAuth =
 <AppStack.Navigator>
   <Stack.Screen name="home" component={AppNavigator} options={{ headerShown: false }} />
-  <Stack.Screen name="newTab" component={newBoard} options={{ title: 'Nouveau tableau' }} />
+  <Stack.Screen name="newBoard" component={newBoard} options={{ title: 'Nouveau tableau' }} />
   <Stack.Screen name="newColumn" component={newColumn} options={{ title: 'Nouvelle colonne' }} />
 </AppStack.Navigator>

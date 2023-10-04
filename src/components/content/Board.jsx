@@ -1,10 +1,24 @@
-import { StyleSheet, Text, View} from 'react-native'
+import { useContext } from 'react'
+import { StyleSheet, Text, TouchableOpacity} from 'react-native'
+import { useNavigation } from '@react-navigation/core'
+
+import AppContext from '../../context'
 
 export default ({ board }) => {
+  const { profile, setCurrentBoard } = useContext(AppContext)
+  const navigation = useNavigation()
+
+  function redirectToBoard() {
+    setCurrentBoard(board)
+    profile.currentBoard = board.id
+    profile.save()
+    navigation.navigate('boardView')
+  }
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={redirectToBoard}>
       <Text style={styles.text}>{board.name}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 
