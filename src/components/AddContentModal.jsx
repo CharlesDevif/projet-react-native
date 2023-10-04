@@ -21,7 +21,7 @@ export default () => {
             <>
 
               <TouchableOpacity style={styles.buttonOverlay}
-                onPress={() => redirect('newCard')}
+                onPress={() => redirect('newTask')}
               >
                 <Text style={styles.textOverlay}>Tâche</Text>
                 <View style={styles.imageOverlay}>

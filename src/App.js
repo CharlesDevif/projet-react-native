@@ -11,7 +11,7 @@ import loginView from './views/login'
 import registerView from './views/register'
 import newBoard from './views/newContent/newBoard'
 import newColumn from './views/newContent/newColumn'
-import newCard from './views/newContent/newCard'
+import newTask from './views/newContent/newTask'
 
 import AppNavigator from './components/AppTabNavigator'
 import Loader from './components/Loader'
@@ -68,5 +68,5 @@ const isAuth =
   <Stack.Screen name="home" component={AppNavigator} options={{ headerShown: false }} />
   <Stack.Screen name="newBoard" component={newBoard} options={{ title: 'Nouveau tableau' }} />
   <Stack.Screen name="newColumn" component={newColumn} options={{ title: 'Nouvelle colonne' }} />
-  <Stack.Screen name="newCard" component={newCard} options={{ title: 'Nouvelle Tâche' }} />
+  <Stack.Screen name="newTask" component={newTask} options={{ title: 'Nouvelle Tâche' }} />
 </AppStack.Navigator>

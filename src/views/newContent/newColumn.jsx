@@ -5,7 +5,6 @@ import SelectDropdown from 'react-native-select-dropdown'
 
 import AppContext from '../../context'
 import errorCodeToMessage from '../../functions/errorCodeToMessage'
-import Column from '../../classes/Column'
 import { Button, Input } from '../../components/layout'
 
 export default () => {
@@ -22,7 +21,7 @@ export default () => {
     } else if (!board) {
       Alert.alert('Board invalide')
     } else {
-      Column.create(board, name)
+      board.createColumn(name)
         .then(() => {
           Alert.alert(`colonne ${name} créé.`)
           setName('')
@@ -41,7 +40,8 @@ export default () => {
     <View style={styles.container}>
       <Text>Nom de la Colonne</Text>
       <Input placeholder="Nom de la Colonne" value={name} onChange={setName} />
-      <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner un tableau" data={boards} onSelect={setBoard} buttonTextAfterSelection={(board) => board.name} rowTextForSelection={(board) => board.name} />
+      <Text>Tableau</Text>
+      <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner un tableau" data={boards} onSelect={setBoard} buttonTextAfterSelection={board => board.name} rowTextForSelection={board => board.name} />
       <Button onClick={createColumn}>Créer</Button>
     </View>
   )

@@ -42,6 +42,18 @@ export default class Board {
       this.id = res.id
     }
   }
+  async createColumn(name) {
+    if (!this.columns) {
+      this.columns = []
+    }
+    this.columns.push({
+      name: name
+    })
+    await this.save()
+  }
+  async createTask(name, description, column) {
+    // TODO: createTask
+  }
 
   async delete() {
     await deleteDoc(doc(db, collectionName, this.id))
