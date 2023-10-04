@@ -1,13 +1,11 @@
-import React, { useState } from "react"
-import { View, StyleSheet, Text, StatusBar, Alert } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import React, { useState } from 'react'
+import { View, StyleSheet, Text, StatusBar, Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import { auth } from '../api/firebase'
 
 import errorCodeToMessage from '../functions/errorCodeToMessage'
-import Button from "../components/Layout/Button"
-import Input from '../components/Layout/Input'
-import Link from '../components/Layout/Link'
+import { Button, Input, Link } from '../components/Layout'
 
 
 

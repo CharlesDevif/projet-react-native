@@ -1,8 +1,8 @@
 import { StatusBar, StyleSheet, View } from 'react-native'
 import { useContext } from 'react'
 
+import { Button } from '../components/Layout'
 import AppContext from '../context'
-import Button from '../components/Layout/Button'
 
 export default () => {
   const {auth, firebaseUser, profile} = useContext(AppContext)

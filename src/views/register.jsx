@@ -5,10 +5,8 @@ import { useNavigation } from '@react-navigation/native'
 import { createUserWithEmailAndPassword } from '@firebase/auth'
 import { auth } from '../api/firebase'
 
-import Button from '../components/Layout/Button'
-import Input from '../components/Layout/Input'
-import Link from '../components/Layout/Link'
 import Profile from '../classes/Profile'
+import { Button, Input, Link } from '../components/Layout'
 import errorCodeToMessage from '../functions/errorCodeToMessage'
 
 
