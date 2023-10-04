@@ -1,24 +1,15 @@
 import { Text,View,ScrollView,StyleSheet, StatusBar, Alert } from 'react-native'
 import AppContext from '../../context'
-import { useContext, useEffect, useState } from 'react'
-import Column from '../../classes/Column'
+import { useContext } from 'react'
 import { Button } from '../../components/layout'
 
 
 export default () => {
   const { currentBoard } = useContext(AppContext)
-  const [columns, setColumns]= useState([])
 
   function deleteBoard() {
     Alert.alert('Comment ça mon reuf ?')
   }
-
-  useEffect(() => {
-    Column.listenByBoard(currentBoard.id, res => {
-      console.log(res)
-      setColumns(res)
-    })
-  }, [])
 
 
 
@@ -29,7 +20,9 @@ export default () => {
         <Button onClick={deleteBoard} error>Supprimer le tableau</Button>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        {columns.map(col => <Text>{col.name}</Text>)}
+        {currentBoard.columns && currentBoard.columns.map((col, index) =>
+          <Text key={index}>{col.name}</Text>
+        )}
       </ScrollView>
     </View>
   )
