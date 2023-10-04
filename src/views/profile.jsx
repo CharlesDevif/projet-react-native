@@ -20,7 +20,7 @@ export default () => {
   return (
     <View style={styles.container}>
       <Button onClick={signOut}>Déconnexion</Button>
-      <Button error onClick={deleteAccount}>Suppriemr le compte</Button>
+      <Button error onClick={deleteAccount}>Supprimer le compte</Button>
     </View>
   )
 }
