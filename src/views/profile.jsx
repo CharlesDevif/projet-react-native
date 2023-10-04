@@ -1,7 +1,7 @@
 import { StatusBar, StyleSheet, View } from 'react-native'
 import { useContext } from 'react'
 
-import { Button } from '../components/Layout'
+import { Button } from '../components/layout'
 import AppContext from '../context'
 
 export default () => {

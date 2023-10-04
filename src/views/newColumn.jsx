@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import AppContext from '../context'
 import Column from '../classes/Column'
-import { Button, Input } from '../components/Layout'
+import { Button, Input } from '../components/layout'
 
 export default () => {
   const { profile } = useContext(AppContext)

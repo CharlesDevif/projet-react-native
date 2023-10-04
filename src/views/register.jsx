@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from '@firebase/auth'
 import { auth } from '../api/firebase'
 
 import Profile from '../classes/Profile'
-import { Button, Input, Link } from '../components/Layout'
+import { Button, Input, Link } from '../components/layout'
 import errorCodeToMessage from '../functions/errorCodeToMessage'
 
 

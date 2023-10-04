@@ -1,14 +1,16 @@
-import React, { useContext } from 'react'
-import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
 
 import AppContext from '../context'
 import Board from '../classes/Board'
-import AddContentMenu from '../components/addContentMenu'
+import AddContentMenu from '../components/AddContentMenu'
 
 export default () => {
   const { profile } = useContext(AppContext)
+  const [boards, setBoards] = useState([])
+
   Board.listenByOwner(profile.id, res => {
-    console.log(res)
+    setBoards(res)
   })
 
   return (
@@ -18,6 +20,15 @@ export default () => {
         <Text style={styles.headerListeBoard}>
           { profile ? `Espace de travail de : ${profile.email}` : 'Déconnecté' }
         </Text>
+        <View>
+          {
+            boards.map(board => {
+              return (
+                <Text key={board.id}>{board.name}</Text>
+              )
+            })
+          }
+        </View>
       </SafeAreaView>
       <AddContentMenu />
     </>

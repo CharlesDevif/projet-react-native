@@ -5,7 +5,7 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 
 import { auth } from '../api/firebase'
 
 import errorCodeToMessage from '../functions/errorCodeToMessage'
-import { Button, Input, Link } from '../components/Layout'
+import { Button, Input, Link } from '../components/layout'
 
 
 
