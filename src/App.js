@@ -8,6 +8,7 @@ import AppContext from './context'
 import Profile from './classes/Profile'
 import LoginView from './views/login'
 import RegisterView from './views/register'
+import newBoard from './views/newBoard'
 import AppNavigator from './components/appTabNavigator'
 
 
@@ -33,16 +34,22 @@ export default () => {
   return (
     <AppContext.Provider value={{ auth, firebaseUser, profile, setProfile }}>
       <NavigationContainer>
-        { profile ? <AppNavigator /> : notAuth }
+        { profile ? isAuth : notAuth }
       </NavigationContainer>
     </AppContext.Provider>
   )
 }
 
 const Stack = createStackNavigator()
-
 const notAuth =
 <Stack.Navigator>
   <Stack.Screen name="login" component={LoginView} options={{ headerShown: false }} />
   <Stack.Screen name="register" component={RegisterView} options={{ headerShown: false }} />
 </Stack.Navigator>
+
+const AppStack = createStackNavigator()
+const isAuth =
+<AppStack.Navigator>
+  <Stack.Screen name="home" component={AppNavigator} options={{ headerShown: false }} />
+  <Stack.Screen name="newTab" component={newBoard} options={{ title: 'Nouveau tableau' }} />
+</AppStack.Navigator>

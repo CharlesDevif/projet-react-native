@@ -4,7 +4,6 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 import HomeView from "../views/home";
 import ProfileView from "../views/profile";
-import addContentView from "../views/addContent";
 
 const Tab = createBottomTabNavigator();
 
