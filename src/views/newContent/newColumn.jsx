@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/core'
 import SelectDropdown from 'react-native-select-dropdown'
 
 import AppContext from '../../context'
-import Column from '../../classes/Column'
 import { Button, Input } from '../../components/layout'
 import errorCodeToMessage from '../../functions/errorCodeToMessage'
 
@@ -22,8 +21,13 @@ export default () => {
     } else if (!board) {
       Alert.alert('Board invalide')
     } else {
-      const new_column = new Column(null, board.id, name)
-      new_column.save()
+      if (!board.columns) {
+        board.columns = []
+      }
+      board.columns.push({
+        name: name
+      })
+      board.save()
         .then(() => {
           Alert.alert(`colonne ${name} créé.`)
           setName('')

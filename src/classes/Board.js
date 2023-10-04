@@ -5,14 +5,15 @@ const collectionName = 'boards/'
 
 function docToInstance(document) {
   const data = document.data()
-  return !data ? null : new Board(document.id, data.name, data.owner)
+  return !data ? null : new Board(document.id, data.name, data.owner, data.columns)
 }
 
 export default class Board {
-  constructor(id, name, owner) {
+  constructor(id, name, owner, columns) {
     this.id = id
     this.name = name
     this.owner = owner
+    this.columns = columns
   }
 
   static listenByOwner(ownerId, callback) {
@@ -30,7 +31,8 @@ export default class Board {
   async save() {
     const new_board = {
       name: this.name,
-      owner: this.owner
+      owner: this.owner,
+      columns: this.columns
     }
 
     if (this.id) {
