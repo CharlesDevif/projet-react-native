@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 
 import AppContext from '../context'
 import Board from '../classes/Board'
@@ -10,13 +10,14 @@ export default () => {
   const { profile } = useContext(AppContext)
   const [boards, setBoards] = useState([])
 
+  const [isMenuModalOpen, setMenuModalOpen] = useState(false)
+
   Board.listenByOwner(profile.id, res => {
     setBoards(res)
   })
-
   return (
-    <>
-      <SafeAreaView style={styles.container}>
+    <TouchableWithoutFeedback onPress={() => setMenuModalOpen(!isMenuModalOpen)}>
+      <View style={styles.container}>
         <StatusBar style="light" />
         <Text style={styles.headerListeBoard}>
           { profile ? `Espace de travail de : ${profile.email}` : 'Déconnecté' }
@@ -24,28 +25,28 @@ export default () => {
         <View style={styles.boardsContainer}>
           { boards.map(board => <BoardView key={board.id} board={board} />)}
         </View>
-      </SafeAreaView>
-      <AddContentMenu />
-    </>
+        <AddContentMenu  toggleMenu={isMenuModalOpen} />
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
-    backgroundColor: "#171b1e",
+    width: '100%',
+    backgroundColor: '#171b1e',
   },
   headerListeBoard: {
     padding: 16,
-    color: "#ffff",
-    backgroundColor: "#000000",
-    textAlign: 'center'
+    color: '#ffff',
+    backgroundColor: '#000000',
+    textAlign: 'center',
   },
 
   boardsContainer: {
     padding: 16,
     gap: 16,
     borderRadius : 8,
-  }
+  },
 })

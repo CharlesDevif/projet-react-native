@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import ButtonWorkspace from './layout/ButtonWorkspace'
 
-export default () => {
+export default (toggleMenu) => {
   const [menuModal, setMenuModal] = useState(false)
   const navigation = useNavigation()
 
-  // Fonction pour fermer le menu modal lorsque l'utilisateur clique en dehors
-  const closeMenuModal = () => {
+  useEffect(() => {                                 
     setMenuModal(false)
-  }
+  }, [toggleMenu])
+
+ 
 
   return (
-    <TouchableWithoutFeedback onPress={closeMenuModal}>
+    <TouchableWithoutFeedback onPress={() => setMenuModal(false)}>
       <View style={styles.containerButtonAdd}>
         {menuModal &&
           <View style={styles.buttonOverlayContainer}>
