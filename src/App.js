@@ -10,10 +10,12 @@ import LoginView from './views/login'
 import RegisterView from './views/register'
 import newBoard from './views/newBoard'
 import AppNavigator from './components/appTabNavigator'
+import Loader from './components/loader'
 
 
 
 export default () => {
+  const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState(null)
   const [firebaseUser, setFirebaseUser] = useState(null)
 
@@ -23,10 +25,12 @@ export default () => {
         setFirebaseUser(user)                       // récupération du firebaseUser
         Profile.listenById(user.uid, res => {       // récupération du profile
           setProfile(res)
+          setLoading(false)
         })
       } else {
         setProfile(null)
         setFirebaseUser(null)
+        setLoading(false)
       }
     })
   }, [])
@@ -34,7 +38,7 @@ export default () => {
   return (
     <AppContext.Provider value={{ auth, firebaseUser, profile, setProfile }}>
       <NavigationContainer>
-        { profile ? isAuth : notAuth }
+        { loading ? <Loader /> : profile ? isAuth : notAuth }
       </NavigationContainer>
     </AppContext.Provider>
   )
