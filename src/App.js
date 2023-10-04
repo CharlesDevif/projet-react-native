@@ -9,8 +9,8 @@ import Profile from './classes/Profile'
 import LoginView from './views/login'
 import RegisterView from './views/register'
 import newBoard from './views/newBoard'
-import AppNavigator from './components/appTabNavigator'
-import Loader from './components/loader'
+import AppNavigator from './components/AppTabNavigator'
+import Loader from './components/Loader'
 
 
 
