@@ -9,6 +9,7 @@ import Profile from './classes/Profile'
 import LoginView from './views/login'
 import RegisterView from './views/register'
 import newBoard from './views/newBoard'
+import newColumn from './views/newColumn'
 import AppNavigator from './components/AppTabNavigator'
 import Loader from './components/Loader'
 
@@ -18,6 +19,7 @@ export default () => {
   const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState(null)
   const [firebaseUser, setFirebaseUser] = useState(null)
+  const [boards, setBoards] = useState([])
 
   useEffect(() => {                                 // sans ça react fait une boucle infini
     auth.onAuthStateChanged(async user => {         // détection des changement de connexion
@@ -36,7 +38,11 @@ export default () => {
   }, [])
 
   return (
-    <AppContext.Provider value={{ auth, firebaseUser, profile, setProfile }}>
+    <AppContext.Provider value={{
+      auth, firebaseUser,
+      profile, setProfile,
+      boards, setBoards
+    }}>
       <NavigationContainer>
         { loading ? <Loader /> : profile ? isAuth : notAuth }
       </NavigationContainer>
@@ -56,4 +62,5 @@ const isAuth =
 <AppStack.Navigator>
   <Stack.Screen name="home" component={AppNavigator} options={{ headerShown: false }} />
   <Stack.Screen name="newTab" component={newBoard} options={{ title: 'Nouveau tableau' }} />
+  <Stack.Screen name="newColumn" component={newColumn} options={{ title: 'Nouvelle colonne' }} />
 </AppStack.Navigator>

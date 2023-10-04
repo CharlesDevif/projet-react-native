@@ -1,27 +1,39 @@
 import { useContext, useState } from 'react'
-import { Alert, StatusBar, StyleSheet, Text, View } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
+import { useNavigation } from '@react-navigation/core'
+import SelectDropdown from 'react-native-select-dropdown'
 
 import AppContext from '../context'
 import Column from '../classes/Column'
 import { Button, Input } from '../components/layout'
+import errorCodeToMessage from '../functions/errorCodeToMessage'
 
 export default () => {
-  const { profile } = useContext(AppContext)
+  const { boards } = useContext(AppContext)
   const [name, setName] = useState('')
-  const [board, setBoard] = useState('')
+  const [board, setBoard] = useState(null)
   const navigation = useNavigation()
 
   function createColumn() {
-    const new_column = new Column(null, board.id, name)
-    new_column.save()
-      .then(() => {
-        Alert.alert(`colonne ${name} créé.`)
-        navigation.goBack()
-      })
-      .catch((e) => {
-        Alert.alert(e.code)
-      })
+    setName(name.trim())
+
+    if (name === '') {
+      Alert.alert('Nom invalide')
+    } else if (!board) {
+      Alert.alert('Board invalide')
+    } else {
+      const new_column = new Column(null, board.id, name)
+      new_column.save()
+        .then(() => {
+          Alert.alert(`colonne ${name} créé.`)
+          setName('')
+          setBoard(null)
+          navigation.goBack()
+        })
+        .catch((e) => {
+          Alert.alert(errorCodeToMessage(e.code))
+        })
+    }
   }
 
 
@@ -30,6 +42,7 @@ export default () => {
     <View style={styles.container}>
       <Text>Nom de la Colonne</Text>
       <Input placeholder="Nom de la Colonne" value={name} onChange={setName} />
+      <SelectDropdown data={boards} onSelect={setBoard} buttonTextAfterSelection={(board) => board.name} rowTextForSelection={(board) => board.name} />
       <Button onClick={createColumn}>Créer</Button>
     </View>
   )
@@ -40,7 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    justifyContent: 'center'
   }
 })

@@ -7,8 +7,7 @@ import AddContentMenu from '../components/AddContentModal'
 import BoardView from '../components/content/Board'
 
 export default () => {
-  const { profile } = useContext(AppContext)
-  const [boards, setBoards] = useState([])
+  const { profile, boards, setBoards } = useContext(AppContext)
 
   useEffect(() => {
     Board.listenByOwner(profile.id, res => {

@@ -20,6 +20,14 @@ export default () => {
                   <Image source={require('../assets/imgs/Home.png')} />
                 </View>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonOverlay}
+                onPress={() => navigation.navigate('newColumn')}
+              >
+                <Text style={styles.textOverlay}>Colonne</Text>
+                <View style={styles.imageOverlay}>
+                  <Image source={require('../assets/imgs/Home.png')} />
+                </View>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonOverlay}
                 onPress={() => navigation.navigate('newTab')}

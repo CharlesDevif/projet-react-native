@@ -3,11 +3,10 @@ import { Alert, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import AppContext from '../context'
-import { Card, Board, Column } from '../classes'
+import Card from '../classes/Card'
 import { Button, Input } from '../components/layout'
 
 export default () => {
-  const { profile } = useContext(AppContext)
   const [name, setName] = useState('')
   const [board, setBoard] = useState('')
   const [column, setColumn] = useState('')
@@ -31,12 +30,12 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Text>Nom de la Card</Text>
+      <Text>Nom de la card</Text>
       <Input placeholder="Nom de la Card" value={name} onChange={setName} />
       <Text>Description</Text>
       <Input placeholder="Description" value={description} onChange={setDescription} />
       <Text>Image</Text>
-      <Input placeholder="Image" value={image} onChange={setImage} />
+      <Input placeholder="Nom de la Card" value={image} onChange={setimage} />
       <Button onClick={createCard}>Créer</Button>
     </View>
   )
