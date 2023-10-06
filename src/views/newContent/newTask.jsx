@@ -15,31 +15,30 @@ export default () => {
   const navigation = useNavigation()
 
 
-    function createTask() {
-      setName(name.trim())
-      setDescription(description.trim())
-  
-      if (name === '') {
-        Alert.alert('Nom invalide')
-      } else if (!board) {
-        Alert.alert('Board invalide')
-      } else if (!column) {
-        Alert.alert('Column invalide')
-      } else {
+  function createTask() {
+    setName(name.trim())
+    setDescription(description.trim())
 
-        board.createTask(name, description, column)
-          .then(() => {
-            Alert.alert(`colonne ${name} créé.`)
-            setName('')
-            setDescription('')
-            setBoard(null)
-            setColumn(null)
-            navigation.goBack()
-          })
-          .catch((e) => {
+    if(!board) {
+      Alert.alert('Tableau invalide')
+    } else {
+      board.createTask(name, description, column)
+        .then(() => {
+          Alert.alert(`Tâche ${name} créé.`)
+          setName('')
+          setDescription('')
+          setBoard(null)
+          setColumn(null)
+          navigation.goBack()
+        })
+        .catch(e => {
+          if (e.code) {
             Alert.alert(errorCodeToMessage(e.code))
-          })
-      }
+          } else {
+            Alert.alert(e.message)
+          }
+        })
+    }
   }
 
 

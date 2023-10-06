@@ -8,7 +8,7 @@ import Board from '../../classes/Board'
 import { Button, Input } from '../../components/layout'
 
 export default () => {
-  const { profile, setCurrentBoard } = useContext(AppContext)
+  const { profile, setCurrentBoard, boards } = useContext(AppContext)
   const [name, setName] = useState('')
   const navigation = useNavigation()
 
@@ -16,6 +16,8 @@ export default () => {
     setName(name.trim())
     if (name === '') {
       Alert.alert('Nom invalide.')
+    } else if (boards.some(b => b.name === name)) {
+      Alert.alert('Nom déjà utilisé')
     } else {
       const new_board = new Board(null, name, profile.id, [])
       new_board.save()
@@ -26,8 +28,12 @@ export default () => {
           setCurrentBoard(new_board)
           navigation.navigate('boardView')
         })
-        .catch((e) => {
-          Alert.alert(errorCodeToMessage(e.code))
+        .catch(e => {
+          if (e.code) {
+            Alert.alert(errorCodeToMessage(e.code))
+          } else {
+            Alert.alert(e.message)
+          }
         })
     }
   }

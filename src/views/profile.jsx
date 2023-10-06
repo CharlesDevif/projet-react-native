@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { useContext } from 'react'
 
 import { Button } from '../components/layout'
@@ -18,10 +18,16 @@ export default () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Button onClick={signOut}>Déconnexion</Button>
-      <Button error onClick={deleteAccount}>Supprimer le compte</Button>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <Text style={styles.title}>プロフィール</Text>
+        </View>
+        <View style={styles.button}>
+          <Button onClick={signOut}>切断する</Button>
+          <Button outlined error onClick={deleteAccount}>アカウントを削除する</Button>
+        </View>
+      </View>
+   
   )
 }
 
@@ -30,7 +36,27 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    justifyContent: 'space-around',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "#171b1e",
+  },
+  title: {
+    color: '#fcfcfc',
+    fontSize: 28,
+  },
+  card: {
+    width: 330,
+    alignItems: 'center',
+    padding: 16,
+    marginLeft: 25,
+    marginRight: 16,
+    backgroundColor: "#171b1e",
+    borderWidth: 2,
+    borderColor: '#fcfcfc',
+    borderRadius: 8,
+  },
+  button: {
+    gap:16,
   }
 })
+  

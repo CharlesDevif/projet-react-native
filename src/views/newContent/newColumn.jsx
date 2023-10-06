@@ -15,11 +15,8 @@ export default () => {
 
   function createColumn() {
     setName(name.trim())
-
-    if (name === '') {
-      Alert.alert('Nom invalide')
-    } else if (!board) {
-      Alert.alert('Board invalide')
+    if (!board) {
+      Alert.alert('Tableau invalide')
     } else {
       board.createColumn(name)
         .then(() => {
@@ -28,8 +25,12 @@ export default () => {
           setBoard(null)
           navigation.goBack()
         })
-        .catch((e) => {
-          Alert.alert(errorCodeToMessage(e.code))
+        .catch(e => {
+          if (e.code) {
+            Alert.alert(errorCodeToMessage(e.code))
+          } else {
+            Alert.alert(e.message)
+          }
         })
     }
   }

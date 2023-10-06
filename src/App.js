@@ -15,6 +15,7 @@ import newTask from './views/newContent/newTask'
 
 import AppNavigator from './components/AppTabNavigator'
 import Loader from './components/Loader'
+import modifTask from './views/newContent/modifTask'
 
 
 
@@ -24,6 +25,7 @@ export default () => {
   const [firebaseUser, setFirebaseUser] = useState(null)
   const [boards, setBoards] = useState([])
   const [currentBoard, setCurrentBoard] = useState(null)
+  const [currentTask, setCurrentTask] = useState(null)
 
   useEffect(() => {                                 // sans ça react fait une boucle infini
     auth.onAuthStateChanged(async user => {         // détection des changement de connexion
@@ -46,7 +48,8 @@ export default () => {
       auth, firebaseUser,
       profile, setProfile,
       boards, setBoards,
-      currentBoard, setCurrentBoard
+      currentBoard, setCurrentBoard,
+      currentTask, setCurrentTask
     }}>
       <NavigationContainer>
         { loading ? <Loader /> : profile ? isAuth : notAuth }
@@ -69,4 +72,5 @@ const isAuth =
   <Stack.Screen name="newBoard" component={newBoard} options={{ title: 'Nouveau tableau' }} />
   <Stack.Screen name="newColumn" component={newColumn} options={{ title: 'Nouvelle colonne' }} />
   <Stack.Screen name="newTask" component={newTask} options={{ title: 'Nouvelle Tâche' }} />
+  <Stack.Screen name="modifTask" component={modifTask} options={{ title: 'Modif Tâche', headerShown: false }}  />
 </AppStack.Navigator>
