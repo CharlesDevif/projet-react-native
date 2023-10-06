@@ -26,6 +26,7 @@ export default () => {
   const [boards, setBoards] = useState([])
   const [currentBoard, setCurrentBoard] = useState(null)
   const [currentTask, setCurrentTask] = useState(null)
+  const [currentColumn, setCurrentColumn] = useState(null)
 
   useEffect(() => {                                 // sans ça react fait une boucle infini
     auth.onAuthStateChanged(async user => {         // détection des changement de connexion
@@ -49,6 +50,7 @@ export default () => {
       profile, setProfile,
       boards, setBoards,
       currentBoard, setCurrentBoard,
+      currentColumn, setCurrentColumn,
       currentTask, setCurrentTask
     }}>
       <NavigationContainer>

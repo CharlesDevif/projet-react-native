@@ -20,11 +20,11 @@ export default () => {
   return (
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.title}>プロフィール</Text>
+          <Text style={styles.title}>Profile</Text>
         </View>
         <View style={styles.button}>
-          <Button onClick={signOut}>切断する</Button>
-          <Button outlined error onClick={deleteAccount}>アカウントを削除する</Button>
+          <Button onClick={signOut}>Se déconnecter</Button>
+          <Button outlined error onClick={deleteAccount}>Supprimer le compte</Button>
         </View>
       </View>
    

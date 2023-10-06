@@ -22,12 +22,14 @@ export default ({ children, onClick, success, warning, error, outlined }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'hsl(200, 50%, 50%)',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
     justifyContent:"center",
-    alignItems:'center'
+    alignItems:'center',
+
+    backgroundColor: 'hsl(200, 50%, 50%)',
+    borderColor:'hsl(200, 50%, 50%)',
   },
   text: {
     color: 'hsl(200, 50%, 50%)',

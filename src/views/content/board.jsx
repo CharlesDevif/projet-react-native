@@ -34,11 +34,10 @@ export default () => {
     }
     console.log(currentBoard);
   }
-  
 
   return (
     <View style={styles.container}>
-            <StatusBar style="light" />
+      <StatusBar style="light" />
       <HeaderNav currentBoard={currentBoard} />
       <ScrollView
         style={styles.scrollConteneur}
@@ -47,7 +46,11 @@ export default () => {
       >
         {currentBoard &&
           currentBoard.columns.map((col, index) => (
-            <ColumnCard currentBoard={currentBoard} key={index} column={col}></ColumnCard>
+            <ColumnCard
+              currentBoard={currentBoard}
+              key={index}
+              column={col}
+            ></ColumnCard>
           ))}
         <TouchableOpacity onPress={createColonne} style={styles.addCard}>
           {inputCreateColumn ? (
@@ -57,9 +60,14 @@ export default () => {
                 placeholder="Nom de la colonne"
                 value={columnName}
                 onChangeText={(text) => setColumnName(text)}
+                onBlur={createColonne} 
+                onSubmitEditing={createColonne} 
                 autoFocus
               />
-              <Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
+              <Image
+                style={styles.imageSend}
+                source={require("../../assets/imgs/ValidateBlue.png")}
+              />
             </View>
           ) : (
             <Text style={styles.textAddColumn}>Ajouter une liste</Text>
@@ -107,8 +115,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     color: "#fcfcfc",
   },
-  imageSend:{
+  imageSend: {
     width: 15,
     height: 15,
-  }
+  },
 });

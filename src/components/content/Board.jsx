@@ -1,8 +1,9 @@
 import { useContext } from 'react'
-import { StyleSheet, Text, TouchableOpacity} from 'react-native'
+import { Text } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 
 import AppContext from '../../context'
+import { Button } from '../layout'
 
 export default ({ board }) => {
   const { profile, setCurrentBoard } = useContext(AppContext)
@@ -16,20 +17,8 @@ export default ({ board }) => {
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={redirectToBoard}>
-      <Text style={styles.text}>{board.name}</Text>
-    </TouchableOpacity>
+    <Button outlined onClick={redirectToBoard}>
+      <Text>{board.name}</Text>
+    </Button>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    borderColor: 'red',
-    borderWidth: 1,
-    borderRadius: 8
-  },
-  text: {
-    color: 'red'
-  }
-})

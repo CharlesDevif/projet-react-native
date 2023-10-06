@@ -1,19 +1,24 @@
+import React, { useContext, useState } from "react";
 import {
   Image,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useContext, useState } from "react";
 import AppContext from "../../context/index";
 
 export default () => {
-  const { currentBoard, currentTask } = useContext(AppContext);
+  const { currentBoard, currentTask, currentColumn } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false); // État pour gérer le mode d'édition
   const [editedText, setEditedText] = useState(currentTask.name); // État pour stocker le texte modifié
-  const [backgroundImage, setBackgroundImage] = useState(null);
+
+  function updateName() {
+    setIsEditing(false);
+    currentTask.name = editedText;
+    currentBoard.save();
+  }
 
   return (
     <View style={styles.containerImageBackground}>
@@ -26,40 +31,68 @@ export default () => {
         ]}
       >
         <View style={styles.headerMenu}>
-          <TouchableOpacity>
-            <Text style={styles.Text}>X</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
+         
+            <Text style={[styles.Text, styles.textSize]}>X</Text>
+         
+         
             <Image source={require("../../assets/imgs/BurgerMenu.png")} />
-          </TouchableOpacity>
+         
         </View>
-        <TouchableOpacity style={styles.AddBackground}>
-          <Image source={require("../../assets/imgs/BurgerMenu.png")} />
-          <Text style={styles.Text}>Couverture</Text>
-        </TouchableOpacity>
+        
+          <View style={styles.AddBackground}>
+            <Image source={require("../../assets/imgs/AddImage.png")} />
+            <Text style={[styles.Text, styles.textSize]}>Couverture</Text>
+          </View>
+       
       </View>
-      <View style={styles.containerEditText}>
-        <View style={styles.editTextName}>
-          {isEditing ? ( // Affiche le champ de texte si isEditing est vrai
-            <TextInput
-              style={styles.editTextInput}
-              value={editedText}  
-              multiline={true}
-              onChangeText={(text) => setEditedText(text)}
-              onBlur={() => {
-                setIsEditing(false);
-                // Ici, tu peux enregistrer le texte modifié dans currentTask
-                // par exemple : currentBoard.updateTask(currentTask.id, { name: editedText });
-              }}
-              autoFocus
-            />
-          ) : (
-            <TouchableOpacity onPress={() => setIsEditing(true)}>
-              <Text style={[styles.taskText, styles.Text]}>{editedText}</Text>
-            </TouchableOpacity>
-          )}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if (isEditing) {
+            setIsEditing(false);
+            updateName(); // Enregistre les modifications
+          }
+        }}
+      >
+        <View style={styles.containerEditText}>
+          <View style={styles.editTextName}>
+            {isEditing ? ( // Affiche le champ de texte si isEditing est vrai
+              <TextInput
+                style={styles.editTextInput}
+                value={editedText}
+                onChangeText={(text) => setEditedText(text)}
+                multiline={true} // Permet le passage à la ligne
+                autoFocus
+              />
+            ) : (
+              <TouchableWithoutFeedback
+                onPress={() => setIsEditing(true)}
+                onBlur={() => {
+                  if (isEditing) {
+                    setIsEditing(false);
+                    updateName(); // Enregistre les modifications
+                  }
+                }}
+              >
+                <Text style={[styles.taskText, styles.Text]}>{editedText}</Text>
+              </TouchableWithoutFeedback>
+            )}
+
+            <View style={styles.containerEmplacement}>
+              <Text style={[styles.Text, styles.TextBold, styles.textSize]}>
+                {currentBoard.name}{" "}
+              </Text>
+              <Text style={[styles.Text, styles.textSize]}>
+                {" "}
+                dans la colonne{" "}
+              </Text>
+              <Text style={[styles.Text, styles.TextBold, styles.textSize]}>
+                {" "}
+                {currentColumn.name}{" "}
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -77,6 +110,7 @@ const styles = StyleSheet.create({
   },
   headerMenu: {
     padding: 16,
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -84,22 +118,34 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     flexDirection: "row",
+    backgroundColor:'#171b1e'
   },
   containerEditText: {
     backgroundColor: "#171b1e",
-    
     height: "80%",
   },
-  editTextName:{
-    width:"90%"
+  editTextName: {
+    width: "90%",
   },
   editTextInput: {
+    fontSize: 30,
     color: "#fcfcfc",
-    padding: 18,
+    padding: 22,
   },
   taskText: {
-    padding: 18,
-    backgroundColor: "red",
+    padding: 22,
+    fontSize: 30,
+  },
+  containerEmplacement: {
+    paddingLeft: 22,
+    flexDirection: "row",
+  },
+  TextBold: {
+    fontWeight: "700",
+    fontStyle: "italic",
+  },
+  textSize: {
+    fontSize: 17,
   },
   Text: {
     color: "#fcfcfc",

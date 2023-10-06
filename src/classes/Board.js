@@ -69,8 +69,13 @@ export default class Board {
     await this.save()
   }
 
-  async createTask(name, description, column) {
+  async createTask(name, description, column, imgBlob) {
     const index = this.columns.findIndex(c => c.name === column.name)
+
+    let img = ''
+    if (imgBlob) {
+      
+    }
 
     if (name === '') {
       throw new Error('Nom invalide')
@@ -84,8 +89,9 @@ export default class Board {
         this.columns[index].tasks = []
       }
       this.columns[index].tasks.push({
-        name: name,
-        description: description
+        name,
+        description,
+        img
       })
       await this.save()
     }

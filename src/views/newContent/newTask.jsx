@@ -22,7 +22,7 @@ export default () => {
     if(!board) {
       Alert.alert('Tableau invalide')
     } else {
-      board.createTask(name, description, column)
+      board.createTask(name, description, column, '')
         .then(() => {
           Alert.alert(`Tâche ${name} créé.`)
           setName('')
