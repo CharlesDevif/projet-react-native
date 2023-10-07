@@ -23,7 +23,7 @@ export default () => {
           <Text style={styles.title}>Profile</Text>
         </View>
         <View style={styles.button}>
-          <Button onClick={signOut}>Se déconnecter</Button>
+          <Button basique onClick={signOut}>Se déconnecter</Button>
           <Button outlined error onClick={deleteAccount}>Supprimer le compte</Button>
         </View>
       </View>

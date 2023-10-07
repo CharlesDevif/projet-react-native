@@ -33,12 +33,16 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Input placeholder="Email" value={email} onChange={setEmail} />
-      <Input placeholder="Password" value={password} onChange={setPassword} passwordType />
-      <Button onClick={login}>Se connecter</Button>
-      <Text>Pas encore inscrit ? <Link onClick={() => navigation.navigate('register')}>Cliquez ici</Link>.</Text>
-      <Text>Ou</Text>
-      <Button warning onClick={loginWithGoogle}>Se connecter avec Google</Button>
+      <StatusBar style="light" />
+      <Text style={styles.textWish}>TRELLO WISH</Text>
+      <View style={styles.inputContainer}>
+        <Input outlined blanc placeholder="Email" value={email} onChange={setEmail} />
+        <Input outlined blanc placeholder="Password" value={password} onChange={setPassword} passwordType />
+      </View>
+      <Button basique onClick={login}>Se connecter</Button>
+      <Text style={styles.textStyle}>Pas encore inscrit ? <Link onClick={() => navigation.navigate('register')}>Cliquez ici</Link>.</Text>
+      <Text style={styles.textStyle}>Ou</Text>
+      <Button outlined warning onClick={loginWithGoogle}>Se connecter avec Google</Button>
     </View>
   )
 }
@@ -49,6 +53,24 @@ const styles = StyleSheet.create({
     gap: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor:  "#171b1e",
+  },
+  inputContainer: {
+    width: '80%',
+    height: 130,
+    flexDirection:'column',
+    justifyContent: "space-around",
+  },
+  textStyle:{
+    color:'#fcfcfc',
+  },
+  textWish:{
+    fontSize:40,
+    color:'#699dff',
+    fontWeight:'900',
+
   }
+
+
 })

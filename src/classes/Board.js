@@ -97,9 +97,16 @@ export default class Board {
     }
   }
   async deleteTask(column, task) {
-    const colIndex = this.columns.findIndex(c => c.name === column.name)
-    const taskIndex = this.columns[colIndex].tasks.findIndex(t => t.name === task.name)
-    this.columns[colIndex].tasks(taskIndex, 1)
-    await this.save()
-  }
+    const colIndex = this.columns.findIndex(c => c.name === column.name);
+    const taskIndex = this.columns[colIndex].tasks.findIndex(t => t.name === task.name);
+
+    if (colIndex !== -1 && taskIndex !== -1) {
+        // Utilisez splice pour supprimer la tâche du tableau des tâches
+        this.columns[colIndex].tasks.splice(taskIndex, 1);
+        await this.save();
+    } else {
+        console.error("La colonne ou la tâche n'a pas été trouvée.");
+    }
+}
+
 }
