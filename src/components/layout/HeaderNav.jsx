@@ -1,22 +1,30 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View, TextInput } from "react-native";
 import React, { useState } from "react";
 
-export default function HeaderNav({ currentBoard }) {
+export default function HeaderNav({ currentBoard, setModalVisible, modalVisible }) {
   const [isEditingBoardName, setIsEditingBoardName] = useState(false);
-  const [boardName, setBoardName] = useState(currentBoard.name);
+  const [boardName, setBoardName] = useState(null);
 
-  function deleteBoard() {
-    currentBoard.delete().then(() => {
-      // Mettez ici la logique pour gérer la suppression du tableau.
-    });
-  }
+
+
+
+
+
+  const openModal = () => {
+    setModalVisible(!modalVisible);
+  };
 
   function handleEditBoardName() {
     if (isEditingBoardName) {
       // Mettez ici la logique pour enregistrer le nouveau nom du tableau.
       currentBoard.name = boardName;
       currentBoard.save()
+      setBoardName("");
+      setIsEditingBoardName(false);
+    } else {
+      setIsEditingBoardName(true)
     }
+
     setIsEditingBoardName(!isEditingBoardName);
   }
 
@@ -37,12 +45,13 @@ export default function HeaderNav({ currentBoard }) {
             <Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
           </View>
         ) : (
-          <Text style={styles.textHeader}>{boardName}</Text>
+          <Text style={styles.textHeader}>{currentBoard.name}</Text>
         )}
       </TouchableOpacity>
+      <TouchableOpacity style={styles.zoneClic} onPress={openModal}>
+        <Image source={require('../../assets/imgs/BurgerMenu.png')} />
+      </TouchableOpacity>
 
-      <Image source={require('../../assets/imgs/BurgerMenu.png')} />
-      {/* Ajoutez un bouton pour supprimer le tableau si nécessaire */}
     </View>
   );
 }
@@ -57,13 +66,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#18538c"
   },
+  zoneClic: {
+    padding: 8,
+  },
   textHeader: {
     fontSize: 20,
     fontWeight: "600",
     color: "#fcfcfc"
   },
   containerEditBoardName: {
-    width:200,
+    width: 200,
     flexDirection: "row",
     alignItems: "center"
   },
@@ -80,5 +92,6 @@ const styles = StyleSheet.create({
   imageSend: {
     width: 24,
     height: 24
-  }
+  },
+
 });

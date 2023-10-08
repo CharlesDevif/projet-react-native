@@ -23,8 +23,6 @@ export default () => {
       new_board.save()
         .then(() => {
           Alert.alert(`Tableau "${name}" créé.`)
-          navigation.goBack()
-  
           setCurrentBoard(new_board)
           navigation.navigate('boardView')
         })
@@ -42,9 +40,10 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Text>Nom du Tableau</Text>
-      <Input placeholder="Nom du Tableau" value={name} onChange={setName} />
-      <Button onClick={createBoard}>Créer</Button>
+      <View style={styles.inputContainer}>
+        <Input outlined blanc placeholder="Nom du Tableau" value={name} onChange={setName} />
+      </View>
+      <Button basique onClick={createBoard}>Créer</Button>
     </View>
   )
 }
@@ -55,6 +54,16 @@ const styles = StyleSheet.create({
     gap: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-  }
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "#171b1e",
+  },
+  textStyle: {
+    color: '#fcfcfc',
+  },
+  inputContainer: {
+    width: '80%',
+    height: 70,
+    flexDirection: 'column',
+    justifyContent: "space-around",
+  },
 })
