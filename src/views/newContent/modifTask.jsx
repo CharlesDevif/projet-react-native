@@ -2,14 +2,19 @@ import React, { useContext, useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, Modal, TouchableOpacity } from "react-native";
 import AppContext from "../../context/index";
 import { useNavigation } from "@react-navigation/native";
+import { app } from '../../api/firebase'
+import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+const storage = getStorage(app);
+
 
 export default () => {
-	const { currentBoard, currentTask, currentColumn } = useContext(AppContext);
+	const { currentBoard, currentTask, currentColumn,setCurrentTask } = useContext(AppContext);
 	const [modalVisible, setModalVisible] = useState(false);
-	const [isEditing, setIsEditing] = useState(false); // État pour gérer le mode d'édition
-	const [editedText, setEditedText] = useState(currentTask.name); // État pour stocker le texte modifié
-  const navigation = useNavigation();
-
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedText, setEditedText] = useState(currentTask.name);
+	const navigation = useNavigation();
 
 	const openModal = () => {
 		setModalVisible(!modalVisible);
@@ -20,50 +25,103 @@ export default () => {
 		currentTask.name = editedText;
 		currentBoard.save();
 	}
+	function updateImage(urlImg) {
+		currentTask.imgBlob = urlImg;
+		currentBoard.save();
+	}
 
 	function delTask() {
-		currentBoard.deleteTask(currentColumn,currentTask);
-		navigation.goBack()
+		currentBoard.deleteTask(currentColumn, currentTask);
+		navigation.goBack();
 	}
+
+	async function askPermission() {
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (status !== "granted") {
+			console.log("La permission d'accès à la galerie a été refusée.");
+		} else {
+			pickImage();
+		}
+	}
+
+	async function pickImage() {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+		});
+
+		if (!result.cancelled) {
+			const uri = result.assets[0].uri;
+			const response = await fetch(uri);
+			const tmp_blob = await response.blob();
+			uploadImageToFirebaseStorage(tmp_blob);
+		}
+	}
+
+	async function uploadImageToFirebaseStorage(blob) {
+		try {
+		  // Génère un nom de fichier unique pour l'image.
+		  const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
+	  
+		  // Référence de stockage Firebase pour le nouvel emplacement de l'image.
+		  const storageRef = ref(storage, `images/${imageName}`);
+	  
+		  // Envoie le blob vers Firebase Storage.
+		  await uploadBytes(storageRef, blob);
+	  
+		  // Obtient l'URL de téléchargement de l'image.
+		  const downloadURL = await getDownloadURL(storageRef);
+		  
+		  // Met à jour l'image de la tâche
+		  updateImage(downloadURL);
+	  
+		  // Réinitialise la tâche actuelle pour refléter les changements
+		  setCurrentTask({ ...currentTask });
+	  
+		  // Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
+		} catch (error) {
+		  console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
+		}
+	  }
 
 	return (
 		<View style={styles.containerImageBackground}>
-			<View
-				style={[
-					styles.imageBackground,
-					{
-						backgroundColor: "black", // Définis la couleur de fond en noir
-					},
-				]}
-			>
+
+			<Image
+				source={{ uri: currentTask.imgBlob }}
+				style={styles.backgroundImage}
+				resizeMode="cover"
+			/>
+			<View style={styles.contentContainer}>
 				<View style={styles.headerMenu}>
-					<Text style={[styles.Text, styles.textSize]}>X</Text>
-					<TouchableOpacity onPress={openModal}>
+					
+					<Text onPress={ () => navigation.goBack()} style={[styles.Text, styles.textSize,styles.zoneClic]}>X</Text>
+					<TouchableOpacity style={styles.zoneClic} onPress={openModal}>
 						<Image source={require("../../assets/imgs/BurgerMenu.png")} />
 					</TouchableOpacity>
 				</View>
+					<TouchableOpacity  onPress={askPermission} style={styles.AddBackground}>
+						<Image source={require("../../assets/imgs/AddImage.png")} />
+						<Text style={[styles.Text, styles.textSize]}>Couverture</Text>
+					</TouchableOpacity>
 
-				<View style={styles.AddBackground}>
-					<Image source={require("../../assets/imgs/AddImage.png")} />
-					<Text style={[styles.Text, styles.textSize]}>Couverture</Text>
-				</View>
 			</View>
+
 			<TouchableWithoutFeedback
 				onPress={() => {
 					if (isEditing) {
 						setIsEditing(false);
-						updateName(); // Enregistre les modifications
+						updateName();
 					}
 				}}
 			>
 				<View style={styles.containerEditText}>
 					<View style={styles.editTextName}>
-						{isEditing ? ( // Affiche le champ de texte si isEditing est vrai
+						{isEditing ? (
 							<TextInput
 								style={styles.editTextInput}
 								value={editedText}
 								onChangeText={(text) => setEditedText(text)}
-								multiline={true} // Permet le passage à la ligne
+								multiline={true}
 								autoFocus
 							/>
 						) : (
@@ -72,7 +130,7 @@ export default () => {
 								onBlur={() => {
 									if (isEditing) {
 										setIsEditing(false);
-										updateName(); // Enregistre les modifications
+										updateName();
 									}
 								}}
 							>
@@ -88,12 +146,13 @@ export default () => {
 					</View>
 				</View>
 			</TouchableWithoutFeedback>
+
 			{modalVisible ? (
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
-						<Text style={styles.modalText}>Déplacer tache</Text>
+						<Text style={styles.modalText}>Déplacer tâche</Text>
 						<Text onPress={delTask} style={styles.modalText}>
-							Supprimer tache
+							Supprimer tâche
 						</Text>
 						<TouchableOpacity onPress={openModal}>
 							<Text style={styles.modalText}>Fermer la modale</Text>
@@ -110,9 +169,19 @@ const styles = StyleSheet.create({
 		height: "100%",
 		width: "100%",
 	},
-	imageBackground: {
-		height: "20%",
+
+	zoneClic:{
+		padding:8,
+	},
+	backgroundImage: {
+		position: "absolute",
+		top: 0,
+		left: 0,
 		width: "100%",
+		height: 400,
+	},
+	contentContainer: {
+		flex: 1,
 		flexDirection: "column",
 		justifyContent: "space-between",
 	},
@@ -121,19 +190,28 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		flexDirection: "row",
 		justifyContent: "space-between",
+		zIndex: 1,
 	},
 	AddBackground: {
-		padding: 16,
-		alignItems: "center",
-		flexDirection: "row",
+		padding: 8,
+		margin:8,
+		width:130,
 		backgroundColor: "#171b1e",
+		alignItems: "center",
+		justifyContent: "space-between",
+		flexDirection: "row",
+		borderRadius:8,
+		borderWidth:1, 
+		borderColor: "#171b1e",
+		zIndex: 1,
 	},
 	containerEditText: {
 		backgroundColor: "#171b1e",
-		height: "80%",
+		flex: 1,
 	},
 	editTextName: {
 		width: "90%",
+		flex: 1,
 	},
 	editTextInput: {
 		fontSize: 30,

@@ -19,7 +19,7 @@ export default () => {
     setName(name.trim())
     setDescription(description.trim())
 
-    if(!board) {
+    if (!board) {
       Alert.alert('Tableau invalide')
     } else {
       board.createTask(name, description, column, '')
@@ -45,16 +45,22 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Text>Nom de la tâche</Text>
-      <Input placeholder="Nom de la tâche" value={name} onChange={setName} />
-      <Text>Description</Text>
-      <Input placeholder="Description" value={description} onChange={setDescription} />
-      <Text>Tableau</Text>
-      <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner un tableau" data={boards} onSelect={setBoard} buttonTextAfterSelection={board => board.name} rowTextForSelection={board => board.name} />
-      <Text>Colonne</Text>
-      <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner une colonne" data={board && board.columns} onSelect={setColumn} buttonTextAfterSelection={column => column.name} rowTextForSelection={column => column.name} disabled={board === null} />
 
-      <Button onClick={createTask}>Créer</Button>
+      <View style={styles.inputContainer}>
+        <Input outlined blanc placeholder="Nom de la tâche" value={name} onChange={setName} />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Input outlined blanc placeholder="Description" value={description} onChange={setDescription} />
+      </View>
+
+
+      <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner un tableau" data={boards} onSelect={setBoard} buttonTextAfterSelection={board => board.name} rowTextForSelection={board => board.name} />
+      {board && (
+        <SelectDropdown buttonStyle={{ width: '100%' }} defaultButtonText="Sélectionner une colonne" data={board && board.columns} onSelect={setColumn} buttonTextAfterSelection={column => column.name} rowTextForSelection={column => column.name} disabled={board === null} />
+      )}
+
+      <Button basique onClick={createTask}>Créer</Button>
     </View>
   )
 }
@@ -65,6 +71,17 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 16,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+    backgroundColor: "#171b1e",
+
+  },
+  textStyle: {
+    color: '#fcfcfc',
+  },
+  inputContainer: {
+    width: '80%',
+    height: 70,
+    flexDirection: 'column',
+    justifyContent: "space-around",
+  },
 })
