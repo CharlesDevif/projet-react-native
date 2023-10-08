@@ -1,24 +1,32 @@
-
-
-import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal, TouchableWithoutFeedback } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal } from "react-native";
 import AppContext from "../../context/index";
 import * as ImagePicker from "expo-image-picker";
-import { app } from '../../api/firebase'
-
+import { app } from "../../api/firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { PanGestureHandler, State } from "react-native-gesture-handler"; // Import de PanGestureHandler
+import { useNavigation } from "@react-navigation/core";
+import { Animated, PanResponder } from "react-native";
 
 const storage = getStorage(app);
 
-export default ({ currentBoard, column }) => {
+export default ({ currentBoard, column, indexOfColumn }) => {
 	const { setCurrentTask, setCurrentColumn } = useContext(AppContext);
 	const [columnName, setColumnName] = useState(column.name);
+	const [cardAnimations, setCardAnimations] = useState(column.tasks.map(() => new Animated.Value(0)));
 	const [isEditingColumnName, setIsEditingColumnName] = useState(false);
 	const [inputCreateCard, setInputCreateCard] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [cardName, setCardName] = useState("");
 	const navigation = useNavigation();
+	const [isSwiping, setIsSwiping] = useState(false);
+	const [cardOpacities, setCardOpacities] = useState(column.tasks.map(() => new Animated.Value(1))); // Initialisation des opacités
+
+	useEffect(() => {
+		// Mettez à jour les animations lorsque la liste de tâches change
+		setCardAnimations(column.tasks.map(() => new Animated.Value(0)));
+		setCardOpacities(column.tasks.map(() => new Animated.Value(1))); // Initialisation des opacités
+	}, [column.tasks]);
 
 	const openModal = () => {
 		setModalVisible(!modalVisible);
@@ -70,9 +78,12 @@ export default ({ currentBoard, column }) => {
 
 	function createCard() {
 		if (inputCreateCard) {
-			currentBoard.createTask(cardName, "", column, "");
+			const newTask = currentBoard.createTask(cardName, "", column, "");
 			setCardName("");
 			setInputCreateCard(false);
+
+			// Ajoutez une nouvelle valeur à cardAnimations pour la nouvelle carte
+			setCardAnimations([...cardAnimations, new Animated.Value(0)]);
 		} else {
 			setInputCreateCard(true);
 		}
@@ -83,16 +94,64 @@ export default ({ currentBoard, column }) => {
 		setCurrentColumn(column);
 		navigation.navigate("modifTask");
 	}
+
+	function handleCardSwipe(index, gestureState) {
+		// ... autre logique de glissement
+		if (gestureState.dx > 20) {
+			// Glissé vers la droite
+			const nextColumnIndex = indexOfColumn + 1;
+			if (nextColumnIndex < currentBoard.columns.length) {
+				// Vérifiez si la colonne suivante existe
+				const nextColumn = currentBoard.columns[nextColumnIndex];
+				console.log(nextColumn);
+				// Déplacez la tâche vers la colonne suivante
+				nextColumn.tasks.push(column.tasks[index]);
+				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
+				column.tasks.splice(index, 1);
+				currentBoard.save(); // Assurez-vous de sauvegarder les modifications
+
+				// Mettez à jour cardAnimations pour refléter les changements
+				const updatedAnimations = [...cardAnimations];
+				updatedAnimations.splice(index, 1); // Supprimez l'animation de la carte supprimée
+				setCardAnimations(updatedAnimations);
+			}
+		} else if (gestureState.dx < -20) {
+			// Glissé vers la gauche
+			const prevColumnIndex = indexOfColumn - 1;
+			if (prevColumnIndex >= 0) {
+				// Vérifiez si la colonne précédente existe
+				const prevColumn = currentBoard.columns[prevColumnIndex];
+				// Déplacez la tâche vers la colonne précédente
+				prevColumn.tasks.push(column.tasks[index]);
+				console.log("test");
+				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
+				column.tasks.splice(index, 1);
+				currentBoard.save(); // Assurez-vous de sauvegarder les modifications
+
+				// Mettez à jour cardAnimations pour refléter les changements
+				const updatedAnimations = [...cardAnimations];
+				updatedAnimations.splice(index, 1); // Supprimez l'animation de la carte supprimée
+				setCardAnimations(updatedAnimations);
+			}
+		} else {
+			// Réinitialisez la carte à sa position initiale
+			Animated.spring(cardAnimations[index], {
+				toValue: 0,
+				useNativeDriver: false,
+			}).start();
+		}
+	}
+
 	function delcol() {
-		currentBoard.deleteColumn(column)
-		openModal()
+		currentBoard.deleteColumn(column);
+		openModal();
 	}
 
 	function handleEditColumnName() {
 		if (isEditingColumnName) {
 			// Mettez ici la logique pour enregistrer le nouveau nom du tableau.
 			column.name = columnName;
-			currentBoard.save()
+			currentBoard.save();
 		}
 		setIsEditingColumnName(!isEditingColumnName);
 	}
@@ -126,20 +185,43 @@ export default ({ currentBoard, column }) => {
 					</View>
 
 					{column
-						? column.tasks.map((task, index) => (
-							<TouchableOpacity key={index} onPress={() => handelPress(task)}>
-								<View style={styles.containerCards}>
+						? column.tasks.map((task, index) => {
+								const panResponder = PanResponder.create({
+									onStartShouldSetPanResponder: () => true,
+									onMoveShouldSetPanResponder: () => !isSwiping,
+									onPanResponderMove: Animated.event([null, { dx: cardAnimations[index] }], { useNativeDriver: false }),
+									onPanResponderRelease: (e, gestureState) => {
+										handleCardSwipe(index, gestureState);
+									},
+								});
 
-									{task.imgBlob && (
-										<Image
-											source={{ uri: task.imgBlob }}
-											style={{ height: 200 }}
-										/>
-									)}
-									<Text style={styles.textCardDescription}>{task.name}</Text>
-								</View>
-							</TouchableOpacity>
-						))
+								let cardStyle; // Déplacez la déclaration ici
+
+								if (index >= 0 && index < cardAnimations.length) {
+									cardStyle = {
+										transform: [{ translateX: cardAnimations[index] }],
+										opacity: cardAnimations[index].interpolate({
+											inputRange: [0, 100],
+											outputRange: [1, 0.5],
+										}),
+									};
+								}
+
+								return (
+									<Animated.View key={index} {...panResponder.panHandlers} style={[styles.containerCards, cardStyle]}>
+										<TouchableOpacity
+											onPress={() => {
+												if (!isSwiping) {
+													handelPress(task);
+												}
+											}}
+										>
+											{task.imgBlob && <Image source={{ uri: task.imgBlob }} style={{ height: 200 }} />}
+											<Text style={styles.textCardDescription}>{task.name}</Text>
+										</TouchableOpacity>
+									</Animated.View>
+								);
+						  })
 						: null}
 
 					<View style={styles.containerAddCardAndImage}>
@@ -158,7 +240,6 @@ export default ({ currentBoard, column }) => {
 									<Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
 								</View>
 							) : (
-
 								<Text style={styles.addCardText}>Ajouter une carte</Text>
 							)}
 						</TouchableOpacity>
@@ -173,7 +254,9 @@ export default ({ currentBoard, column }) => {
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
 						<Text style={styles.modalText}>Déplacer {column.name}</Text>
-						<Text onPress={delcol} style={styles.modalText}>Supprimer {column.name}</Text>
+						<Text onPress={delcol} style={styles.modalText}>
+							Supprimer {column.name}
+						</Text>
 						<TouchableOpacity onPress={openModal}>
 							<Text style={styles.modalText}>Fermer la modale</Text>
 						</TouchableOpacity>
@@ -190,8 +273,8 @@ const styles = StyleSheet.create({
 	},
 	containerEditColumnName: {
 		flexDirection: "row",
-		alignItems: "center"
-	  },
+		alignItems: "center",
+	},
 	containerCard: {
 		width: 330,
 		padding: 16,

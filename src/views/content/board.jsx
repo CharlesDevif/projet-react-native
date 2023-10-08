@@ -58,6 +58,7 @@ export default () => {
           currentBoard.columns.map((col, index) => (
             <ColumnCard
               currentBoard={currentBoard}
+              indexOfColumn={index}
               key={index}
               column={col}
             ></ColumnCard>

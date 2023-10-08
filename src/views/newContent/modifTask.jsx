@@ -2,15 +2,14 @@ import React, { useContext, useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, Modal, TouchableOpacity } from "react-native";
 import AppContext from "../../context/index";
 import { useNavigation } from "@react-navigation/native";
-import { app } from '../../api/firebase'
+import { app } from "../../api/firebase";
 import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const storage = getStorage(app);
 
-
 export default () => {
-	const { currentBoard, currentTask, currentColumn,setCurrentTask } = useContext(AppContext);
+	const { currentBoard, currentTask, currentColumn, setCurrentTask } = useContext(AppContext);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedText, setEditedText] = useState(currentTask.name);
@@ -59,51 +58,54 @@ export default () => {
 
 	async function uploadImageToFirebaseStorage(blob) {
 		try {
-		  // Génère un nom de fichier unique pour l'image.
-		  const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
-	  
-		  // Référence de stockage Firebase pour le nouvel emplacement de l'image.
-		  const storageRef = ref(storage, `images/${imageName}`);
-	  
-		  // Envoie le blob vers Firebase Storage.
-		  await uploadBytes(storageRef, blob);
-	  
-		  // Obtient l'URL de téléchargement de l'image.
-		  const downloadURL = await getDownloadURL(storageRef);
-		  
-		  // Met à jour l'image de la tâche
-		  updateImage(downloadURL);
-	  
-		  // Réinitialise la tâche actuelle pour refléter les changements
-		  setCurrentTask({ ...currentTask });
-	  
-		  // Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
+			// Génère un nom de fichier unique pour l'image.
+			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
+
+			// Référence de stockage Firebase pour le nouvel emplacement de l'image.
+			const storageRef = ref(storage, `images/${imageName}`);
+
+			// Envoie le blob vers Firebase Storage.
+			await uploadBytes(storageRef, blob);
+
+			// Obtient l'URL de téléchargement de l'image.
+			const downloadURL = await getDownloadURL(storageRef);
+
+			// Met à jour l'image de la tâche
+			updateImage(downloadURL);
+
+			// Réinitialise la tâche actuelle pour refléter les changements
+			setCurrentTask({ ...currentTask });
+
+			// Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
 		} catch (error) {
-		  console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
+			console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
 		}
-	  }
+	}
 
 	return (
-		<View style={styles.containerImageBackground}>
-
-			<Image
-				source={{ uri: currentTask.imgBlob }}
-				style={styles.backgroundImage}
-				resizeMode="cover"
-			/>
+		<View style={[styles.containerImageBackground, { backgroundColor: currentTask.imgBlob ? "transparent" : "black" } ]}>
+				<Image
+					source={{ uri: currentTask.imgBlob }}
+					style={[
+						styles.backgroundImage,
+						{ backgroundColor: currentTask.imgBlob ? "transparent" : "black" }, // Fond noir si pas d'image
+					]}
+					resizeMode="cover"
+				/>
+			
 			<View style={styles.contentContainer}>
 				<View style={styles.headerMenu}>
-					
-					<Text onPress={ () => navigation.goBack()} style={[styles.Text, styles.textSize,styles.zoneClic]}>X</Text>
+					<Text onPress={() => navigation.goBack()} style={[styles.Text, styles.textSize, styles.zoneClic]}>
+						X
+					</Text>
 					<TouchableOpacity style={styles.zoneClic} onPress={openModal}>
 						<Image source={require("../../assets/imgs/BurgerMenu.png")} />
 					</TouchableOpacity>
 				</View>
-					<TouchableOpacity  onPress={askPermission} style={styles.AddBackground}>
-						<Image source={require("../../assets/imgs/AddImage.png")} />
-						<Text style={[styles.Text, styles.textSize]}>Couverture</Text>
-					</TouchableOpacity>
-
+				<TouchableOpacity onPress={askPermission} style={styles.AddBackground}>
+					<Image source={require("../../assets/imgs/AddImage.png")} />
+					<Text style={[styles.Text, styles.textSize]}>Couverture</Text>
+				</TouchableOpacity>
 			</View>
 
 			<TouchableWithoutFeedback
@@ -170,15 +172,15 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 
-	zoneClic:{
-		padding:8,
+	zoneClic: {
+		padding: 8,
 	},
+	
 	backgroundImage: {
 		position: "absolute",
 		top: 0,
 		left: 0,
 		width: "100%",
-		height: 400,
 	},
 	contentContainer: {
 		flex: 1,
@@ -194,14 +196,14 @@ const styles = StyleSheet.create({
 	},
 	AddBackground: {
 		padding: 8,
-		margin:8,
-		width:130,
+		margin: 8,
+		width: 130,
 		backgroundColor: "#171b1e",
 		alignItems: "center",
 		justifyContent: "space-between",
 		flexDirection: "row",
-		borderRadius:8,
-		borderWidth:1, 
+		borderRadius: 8,
+		borderWidth: 1,
 		borderColor: "#171b1e",
 		zIndex: 1,
 	},
