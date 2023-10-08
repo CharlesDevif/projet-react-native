@@ -70,32 +70,31 @@ export default class Board {
   }
 
   async createTask(name, description, column, imgBlob) {
-    const index = this.columns.findIndex(c => c.name === column.name)
-
-    let img = ''
-    if (imgBlob) {
-      
-    }
-
+    const index = this.columns.findIndex(c => c.name === column.name);
+  
     if (name === '') {
-      throw new Error('Nom invalide')
+      throw new Error('Nom invalide');
     } else if (!column) {
-      throw new Error('Column invalide')
+      throw new Error('Column invalide');
     } else if (this.columns[index].tasks.some(t => t.name === name)) {
-      throw new Error('Nom déjà utilisé')
+      throw new Error('Nom déjà utilisé');
     } else {
-
       if (!this.columns[index].tasks) {
-        this.columns[index].tasks = []
+        this.columns[index].tasks = [];
       }
-      this.columns[index].tasks.push({
+  
+      const task = {
         name,
         description,
-        img
-      })
-      await this.save()
+        imgBlob: imgBlob ? imgBlob : '', // Stockez l'URL de l'image dans imgBlob
+      };
+  
+      this.columns[index].tasks.push(task); // Ajoutez la tâche à la liste des tâches de la colonne
+      await this.save();
     }
   }
+  
+  
   async deleteTask(column, task) {
     const colIndex = this.columns.findIndex(c => c.name === column.name);
     const taskIndex = this.columns[colIndex].tasks.findIndex(t => t.name === task.name);

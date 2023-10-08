@@ -1,15 +1,23 @@
+
+
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal, TouchableWithoutFeedback } from "react-native";
 import AppContext from "../../context/index";
 import * as ImagePicker from "expo-image-picker";
+import { app } from '../../api/firebase'
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+const storage = getStorage(app);
 
 export default ({ currentBoard, column }) => {
 	const { setCurrentTask, setCurrentColumn } = useContext(AppContext);
+	const [columnName, setColumnName] = useState(column.name);
+	const [isEditingColumnName, setIsEditingColumnName] = useState(false);
 	const [inputCreateCard, setInputCreateCard] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [cardName, setCardName] = useState("");
-	const [blob, setBlob] = useState(null);
 	const navigation = useNavigation();
 
 	const openModal = () => {
@@ -34,8 +42,7 @@ export default ({ currentBoard, column }) => {
 			const uri = result.assets[0].uri;
 			const response = await fetch(uri);
 			const tmp_blob = await response.blob();
-			console.log(tmp_blob);
-			setBlob(tmp_blob);
+			uploadImageToFirebaseStorage(tmp_blob);
 		}
 	}
 
@@ -45,16 +52,17 @@ export default ({ currentBoard, column }) => {
 			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
 
 			// Référence de stockage Firebase pour le nouvel emplacement de l'image.
-			const ref = firebase.storage().ref().child(`images/${imageName}`);
+			const storageRef = ref(storage, `images/${imageName}`);
 
 			// Envoie le blob vers Firebase Storage.
-			await ref.put(blob);
+			await uploadBytes(storageRef, blob);
 
 			// Obtient l'URL de téléchargement de l'image.
-			const downloadURL = await ref.getDownloadURL();
+			const downloadURL = await getDownloadURL(storageRef);
 			console.log("Image téléchargée avec succès. URL de téléchargement :", downloadURL);
+			currentBoard.createTask(imageName, "", column, downloadURL);
 
-			// Tu peux utiliser cette URL pour afficher l'image dans ton application ou la stocker dans une base de données Firebase si nécessaire.
+			// Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
 		} catch (error) {
 			console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
 		}
@@ -62,7 +70,7 @@ export default ({ currentBoard, column }) => {
 
 	function createCard() {
 		if (inputCreateCard) {
-			currentBoard.createTask(cardName, "", column, blob);
+			currentBoard.createTask(cardName, "", column, "");
 			setCardName("");
 			setInputCreateCard(false);
 		} else {
@@ -75,17 +83,43 @@ export default ({ currentBoard, column }) => {
 		setCurrentColumn(column);
 		navigation.navigate("modifTask");
 	}
-  function delcol() {
-    currentBoard.deleteColumn(column)
-    openModal()
-  }
+	function delcol() {
+		currentBoard.deleteColumn(column)
+		openModal()
+	}
+
+	function handleEditColumnName() {
+		if (isEditingColumnName) {
+			// Mettez ici la logique pour enregistrer le nouveau nom du tableau.
+			column.name = columnName;
+			currentBoard.save()
+		}
+		setIsEditingColumnName(!isEditingColumnName);
+	}
 
 	return (
 		<View>
 			<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 				<View style={styles.containerCard}>
 					<View style={styles.headerCollum}>
-						<Text style={styles.text}>{column.name}</Text>
+						<TouchableOpacity onPress={handleEditColumnName}>
+							{isEditingColumnName ? (
+								<View style={styles.containerEditColumnName}>
+									<TextInput
+										style={styles.input}
+										placeholder="Nom de la column"
+										value={columnName}
+										onChangeText={(text) => setColumnName(text)}
+										autoFocus
+										onBlur={handleEditColumnName}
+										onSubmitEditing={handleEditColumnName}
+									/>
+									<Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
+								</View>
+							) : (
+								<Text style={styles.text}>{column.name}</Text>
+							)}
+						</TouchableOpacity>
 						<TouchableOpacity key={column.id} onPress={openModal}>
 							<Image source={require("../../assets/imgs/BurgerMenu.png")} />
 						</TouchableOpacity>
@@ -93,12 +127,19 @@ export default ({ currentBoard, column }) => {
 
 					{column
 						? column.tasks.map((task, index) => (
-								<TouchableOpacity key={index} onPress={() => handelPress(task)}>
-									<View style={styles.containerCards}>
-										<Text style={styles.textCardDescription}>{task.name}</Text>
-									</View>
-								</TouchableOpacity>
-						  ))
+							<TouchableOpacity key={index} onPress={() => handelPress(task)}>
+								<View style={styles.containerCards}>
+
+									{task.imgBlob && (
+										<Image
+											source={{ uri: task.imgBlob }}
+											style={{ height: 200 }}
+										/>
+									)}
+									<Text style={styles.textCardDescription}>{task.name}</Text>
+								</View>
+							</TouchableOpacity>
+						))
 						: null}
 
 					<View style={styles.containerAddCardAndImage}>
@@ -117,6 +158,7 @@ export default ({ currentBoard, column }) => {
 									<Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
 								</View>
 							) : (
+
 								<Text style={styles.addCardText}>Ajouter une carte</Text>
 							)}
 						</TouchableOpacity>
@@ -131,7 +173,7 @@ export default ({ currentBoard, column }) => {
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
 						<Text style={styles.modalText}>Déplacer {column.name}</Text>
-            			<Text onPress={delcol} style={styles.modalText}>Supprimer {column.name}</Text>
+						<Text onPress={delcol} style={styles.modalText}>Supprimer {column.name}</Text>
 						<TouchableOpacity onPress={openModal}>
 							<Text style={styles.modalText}>Fermer la modale</Text>
 						</TouchableOpacity>
@@ -146,7 +188,10 @@ const styles = StyleSheet.create({
 	scrollView: {
 		flex: 1,
 	},
-
+	containerEditColumnName: {
+		flexDirection: "row",
+		alignItems: "center"
+	  },
 	containerCard: {
 		width: 330,
 		padding: 16,
