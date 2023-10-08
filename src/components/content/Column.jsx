@@ -253,7 +253,6 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 			{modalVisible ? (
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
-						<Text style={styles.modalText}>Déplacer {column.name}</Text>
 						<Text onPress={delcol} style={styles.modalText}>
 							Supprimer {column.name}
 						</Text>

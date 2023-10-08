@@ -152,9 +152,9 @@ export default () => {
 			{modalVisible ? (
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
-						<Text style={styles.modalText}>Déplacer tâche</Text>
+	
 						<Text onPress={delTask} style={styles.modalText}>
-							Supprimer tâche
+							Supprimer la tâche
 						</Text>
 						<TouchableOpacity onPress={openModal}>
 							<Text style={styles.modalText}>Fermer la modale</Text>
