@@ -67,7 +67,6 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 
 			// Obtient l'URL de téléchargement de l'image.
 			const downloadURL = await getDownloadURL(storageRef);
-			console.log("Image téléchargée avec succès. URL de téléchargement :", downloadURL);
 			currentBoard.createTask(imageName, "", column, downloadURL);
 
 			// Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
@@ -103,7 +102,6 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 			if (nextColumnIndex < currentBoard.columns.length) {
 				// Vérifiez si la colonne suivante existe
 				const nextColumn = currentBoard.columns[nextColumnIndex];
-				console.log(nextColumn);
 				// Déplacez la tâche vers la colonne suivante
 				nextColumn.tasks.push(column.tasks[index]);
 				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
@@ -123,7 +121,6 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 				const prevColumn = currentBoard.columns[prevColumnIndex];
 				// Déplacez la tâche vers la colonne précédente
 				prevColumn.tasks.push(column.tasks[index]);
-				console.log("test");
 				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
 				column.tasks.splice(index, 1);
 				currentBoard.save(); // Assurez-vous de sauvegarder les modifications
@@ -201,9 +198,9 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 									cardStyle = {
 										transform: [{ translateX: cardAnimations[index] }],
 										opacity: cardAnimations[index].interpolate({
-											inputRange: [0, 100],
+											inputRange: [-100, 100], // Changez 0 en -20 pour inclure les gestes vers la gauche
 											outputRange: [1, 0.5],
-										}),
+										  }),
 									};
 								}
 
