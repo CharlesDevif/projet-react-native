@@ -1,104 +1,83 @@
-import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, Modal, TouchableOpacity } from "react-native";
-import AppContext from "../../context/index";
-import { useNavigation } from "@react-navigation/native";
-import { app } from "../../api/firebase";
-import * as ImagePicker from "expo-image-picker";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import React, { useContext, useState } from "react"
+import { Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, Modal, TouchableOpacity } from "react-native"
+import AppContext from "../../context/index"
+import { useNavigation } from "@react-navigation/native"
+import { app } from "../../api/firebase"
+import * as ImagePicker from "expo-image-picker"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
-const storage = getStorage(app);
+const storage = getStorage(app)
 
 export default () => {
-	const { currentBoard, currentTask, currentColumn, setCurrentTask } = useContext(AppContext);
-	const [modalVisible, setModalVisible] = useState(false);
-	const [isEditing, setIsEditing] = useState(false);
-	const [editedText, setEditedText] = useState(currentTask.name);
-	const navigation = useNavigation();
-
-	const openModal = () => {
-		setModalVisible(!modalVisible);
-	};
+	const { currentBoard, currentTask, currentColumn, setCurrentTask } = useContext(AppContext)
+	const [modalVisible, setModalVisible] = useState(false)
+	const [isEditing, setIsEditing] = useState(false)
+	const [editedText, setEditedText] = useState(currentTask.name)
+	const navigation = useNavigation()
 
 	function updateName() {
-		setIsEditing(false);
-		currentTask.name = editedText;
-		currentBoard.save();
-	}
-	function updateImage(urlImg) {
-		currentTask.imgBlob = urlImg;
-		currentBoard.save();
+		setIsEditing(false)
+		currentTask.name = editedText
+		currentBoard.save()
 	}
 
 	function delTask() {
-		currentBoard.deleteTask(currentColumn, currentTask);
-		navigation.goBack();
+		currentBoard.deleteTask(currentColumn, currentTask)
+		navigation.goBack()
 	}
 
 	async function askPermission() {
-		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 		if (status !== "granted") {
-			console.log("La permission d'accès à la galerie a été refusée.");
+			Alert.alert(`La permission d'accès à la galerie a été refusée.`)
 		} else {
-			pickImage();
+			pickImage()
 		}
 	}
 
 	async function pickImage() {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-		});
+		})
 
 		if (!result.cancelled) {
-			const uri = result.assets[0].uri;
-			const response = await fetch(uri);
-			const tmp_blob = await response.blob();
-			uploadImageToFirebaseStorage(tmp_blob);
+			const uri = result.assets[0].uri
+			const response = await fetch(uri)
+			const tmp_blob = await response.blob()
+			uploadImageToFirebaseStorage(tmp_blob)
 		}
 	}
 
 	async function uploadImageToFirebaseStorage(blob) {
 		try {
-			// Génère un nom de fichier unique pour l'image.
-			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
+			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`
+			const storageRef = ref(storage, `images/${imageName}`)
+			await uploadBytes(storageRef, blob)
 
-			// Référence de stockage Firebase pour le nouvel emplacement de l'image.
-			const storageRef = ref(storage, `images/${imageName}`);
-
-			// Envoie le blob vers Firebase Storage.
-			await uploadBytes(storageRef, blob);
-
-			// Obtient l'URL de téléchargement de l'image.
-			const downloadURL = await getDownloadURL(storageRef);
-
-			// Met à jour l'image de la tâche
-			updateImage(downloadURL);
-
-			// Réinitialise la tâche actuelle pour refléter les changements
-			setCurrentTask({ ...currentTask });
-
-			// Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
+			const downloadURL = await getDownloadURL(storageRef)
+			currentTask.imgBlob = downloadURL
+			currentBoard.save()
 		} catch (error) {
-			console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
+			Alert.alert(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error)
 		}
 	}
 
+	const BackgroundImage = () => {
+		return currentTask.imgBlob
+			? <Image source={{ uri: currentTask.imgBlob }} resizeMode="cover" style={styles.backgroundImage} />
+			: <View style={{ backgroundColor: 'black' }} />
+	}
+
 	return (
-		<View style={[styles.containerImageBackground, { backgroundColor: currentTask.imgBlob ? "transparent" : "black" } ]}>
-				<Image
-					source={{ uri: currentTask.imgBlob }}
-					style={[
-						styles.backgroundImage,
-						{ backgroundColor: currentTask.imgBlob ? "transparent" : "black" }, // Fond noir si pas d'image
-					]}
-					resizeMode="cover"
-				/>
-			
+		<View style={[styles.containerImageBackground, { backgroundColor: currentTask.imgBlob ? "transparent" : "black" }]}>
+			<BackgroundImage />
+
 			<View style={styles.contentContainer}>
 				<View style={styles.headerMenu}>
 					<Text onPress={() => navigation.goBack()} style={[styles.Text, styles.textSize, styles.zoneClic]}>
 						X
 					</Text>
-					<TouchableOpacity style={styles.zoneClic} onPress={openModal}>
+					<TouchableOpacity style={styles.zoneClic} onPress={() => setModalVisible(!modalVisible)}>
 						<Image source={require("../../assets/imgs/BurgerMenu.png")} />
 					</TouchableOpacity>
 				</View>
@@ -111,28 +90,22 @@ export default () => {
 			<TouchableWithoutFeedback
 				onPress={() => {
 					if (isEditing) {
-						setIsEditing(false);
-						updateName();
+						setIsEditing(false)
+						updateName()
 					}
 				}}
 			>
 				<View style={styles.containerEditText}>
 					<View style={styles.editTextName}>
 						{isEditing ? (
-							<TextInput
-								style={styles.editTextInput}
-								value={editedText}
-								onChangeText={(text) => setEditedText(text)}
-								multiline={true}
-								autoFocus
-							/>
+							<TextInput style={styles.editTextInput} value={editedText} onChangeText={(text) => setEditedText(text)} multiline={true} autoFocus />
 						) : (
 							<TouchableWithoutFeedback
 								onPress={() => setIsEditing(true)}
 								onBlur={() => {
 									if (isEditing) {
-										setIsEditing(false);
-										updateName();
+										setIsEditing(false)
+										updateName()
 									}
 								}}
 							>
@@ -152,19 +125,18 @@ export default () => {
 			{modalVisible ? (
 				<View style={styles.modaleContainer}>
 					<View style={styles.modalStyle}>
-	
 						<Text onPress={delTask} style={styles.modalText}>
 							Supprimer la tâche
 						</Text>
-						<TouchableOpacity onPress={openModal}>
+						<TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
 							<Text style={styles.modalText}>Fermer la modale</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 			) : null}
 		</View>
-	);
-};
+	)
+}
 
 const styles = StyleSheet.create({
 	containerImageBackground: {
@@ -175,12 +147,14 @@ const styles = StyleSheet.create({
 	zoneClic: {
 		padding: 8,
 	},
-	
+
 	backgroundImage: {
 		position: "absolute",
 		top: 0,
 		left: 0,
 		width: "100%",
+		height:'100%'
+		
 	},
 	contentContainer: {
 		flex: 1,
@@ -258,4 +232,4 @@ const styles = StyleSheet.create({
 		marginBottom: 32,
 		color: "#fcfcfc",
 	},
-});
+})

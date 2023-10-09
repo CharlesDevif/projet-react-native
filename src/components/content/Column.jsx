@@ -1,156 +1,156 @@
-import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal } from "react-native";
-import AppContext from "../../context/index";
-import * as ImagePicker from "expo-image-picker";
-import { app } from "../../api/firebase";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { PanGestureHandler, State } from "react-native-gesture-handler"; // Import de PanGestureHandler
-import { useNavigation } from "@react-navigation/core";
-import { Animated, PanResponder } from "react-native";
+import React, { useContext, useEffect, useState } from "react"
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal } from "react-native"
+import AppContext from "../../context/index"
+import * as ImagePicker from "expo-image-picker"
+import { app } from "../../api/firebase"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { PanGestureHandler, State } from "react-native-gesture-handler" // Import de PanGestureHandler
+import { useNavigation } from "@react-navigation/core"
+import { Animated, PanResponder } from "react-native"
 
-const storage = getStorage(app);
+const storage = getStorage(app)
 
 export default ({ currentBoard, column, indexOfColumn }) => {
-	const { setCurrentTask, setCurrentColumn } = useContext(AppContext);
-	const [columnName, setColumnName] = useState(column.name);
-	const [cardAnimations, setCardAnimations] = useState(column.tasks.map(() => new Animated.Value(0)));
-	const [isEditingColumnName, setIsEditingColumnName] = useState(false);
-	const [inputCreateCard, setInputCreateCard] = useState(false);
-	const [modalVisible, setModalVisible] = useState(false);
-	const [cardName, setCardName] = useState("");
-	const navigation = useNavigation();
-	const [isSwiping, setIsSwiping] = useState(false);
-	const [cardOpacities, setCardOpacities] = useState(column.tasks.map(() => new Animated.Value(1))); // Initialisation des opacités
+	const { setCurrentTask, setCurrentColumn } = useContext(AppContext)
+	const [columnName, setColumnName] = useState(column.name)
+	const [cardAnimations, setCardAnimations] = useState(column.tasks.map(() => new Animated.Value(0)))
+	const [isEditingColumnName, setIsEditingColumnName] = useState(false)
+	const [inputCreateCard, setInputCreateCard] = useState(false)
+	const [modalVisible, setModalVisible] = useState(false)
+	const [cardName, setCardName] = useState("")
+	const navigation = useNavigation()
+	const [isSwiping, setIsSwiping] = useState(false)
+	const [cardOpacities, setCardOpacities] = useState(column.tasks.map(() => new Animated.Value(1))) // Initialisation des opacités
 
 	useEffect(() => {
 		// Mettez à jour les animations lorsque la liste de tâches change
-		setCardAnimations(column.tasks.map(() => new Animated.Value(0)));
-		setCardOpacities(column.tasks.map(() => new Animated.Value(1))); // Initialisation des opacités
-	}, [column.tasks]);
+		setCardAnimations(column.tasks.map(() => new Animated.Value(0)))
+		setCardOpacities(column.tasks.map(() => new Animated.Value(1))) // Initialisation des opacités
+	}, [column.tasks])
 
 	const openModal = () => {
-		setModalVisible(!modalVisible);
-	};
+		setModalVisible(!modalVisible)
+	}
 
 	async function askPermission() {
-		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 		if (status !== "granted") {
-			console.log("La permission d'accès à la galerie a été refusée.");
+			console.log("La permission d'accès à la galerie a été refusée.")
 		} else {
-			pickImage();
+			pickImage()
 		}
 	}
 
 	async function pickImage() {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-		});
+		})
 
 		if (!result.cancelled) {
-			const uri = result.assets[0].uri;
-			const response = await fetch(uri);
-			const tmp_blob = await response.blob();
-			uploadImageToFirebaseStorage(tmp_blob);
+			const uri = result.assets[0].uri
+			const response = await fetch(uri)
+			const tmp_blob = await response.blob()
+			uploadImageToFirebaseStorage(tmp_blob)
 		}
 	}
 
 	async function uploadImageToFirebaseStorage(blob) {
 		try {
 			// Génère un nom de fichier unique pour l'image.
-			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`;
+			const imageName = `${currentBoard.id}__${new Date().getTime()}.jpg`
 
 			// Référence de stockage Firebase pour le nouvel emplacement de l'image.
-			const storageRef = ref(storage, `images/${imageName}`);
+			const storageRef = ref(storage, `images/${imageName}`)
 
 			// Envoie le blob vers Firebase Storage.
-			await uploadBytes(storageRef, blob);
+			await uploadBytes(storageRef, blob)
 
 			// Obtient l'URL de téléchargement de l'image.
-			const downloadURL = await getDownloadURL(storageRef);
-			currentBoard.createTask(imageName, "", column, downloadURL);
+			const downloadURL = await getDownloadURL(storageRef)
+			currentBoard.createTask(imageName, "", column, downloadURL)
 
 			// Vous pouvez utiliser cette URL pour afficher l'image dans votre application ou la stocker dans une base de données Firebase si nécessaire.
 		} catch (error) {
-			console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error);
+			console.error(`Erreur lors de l'envoi de l'image sur Firebase Storage :`, error)
 		}
 	}
 
 	function createCard() {
 		if (inputCreateCard) {
-			const newTask = currentBoard.createTask(cardName, "", column, "");
-			setCardName("");
-			setInputCreateCard(false);
+			const newTask = currentBoard.createTask(cardName, "", column, "")
+			setCardName("")
+			setInputCreateCard(false)
 
 			// Ajoutez une nouvelle valeur à cardAnimations pour la nouvelle carte
-			setCardAnimations([...cardAnimations, new Animated.Value(0)]);
+			setCardAnimations([...cardAnimations, new Animated.Value(0)])
 		} else {
-			setInputCreateCard(true);
+			setInputCreateCard(true)
 		}
 	}
 
 	function handelPress(task) {
-		setCurrentTask(task);
-		setCurrentColumn(column);
-		navigation.navigate("modifTask");
+		setCurrentTask(task)
+		setCurrentColumn(column)
+		navigation.navigate("modifTask")
 	}
 
 	function handleCardSwipe(index, gestureState) {
 		// ... autre logique de glissement
-		if (gestureState.dx > 20) {
+		if (gestureState.dx > 100) {
 			// Glissé vers la droite
-			const nextColumnIndex = indexOfColumn + 1;
+			const nextColumnIndex = indexOfColumn + 1
 			if (nextColumnIndex < currentBoard.columns.length) {
 				// Vérifiez si la colonne suivante existe
-				const nextColumn = currentBoard.columns[nextColumnIndex];
+				const nextColumn = currentBoard.columns[nextColumnIndex]
 				// Déplacez la tâche vers la colonne suivante
-				nextColumn.tasks.push(column.tasks[index]);
-				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
-				column.tasks.splice(index, 1);
-				currentBoard.save(); // Assurez-vous de sauvegarder les modifications
+				nextColumn.tasks.push(column.tasks[index])
+				setCardAnimations([...cardAnimations, new Animated.Value(0)])
+				column.tasks.splice(index, 1)
+				currentBoard.save() // Assurez-vous de sauvegarder les modifications
 
 				// Mettez à jour cardAnimations pour refléter les changements
-				const updatedAnimations = [...cardAnimations];
-				updatedAnimations.splice(index, 1); // Supprimez l'animation de la carte supprimée
-				setCardAnimations(updatedAnimations);
+				const updatedAnimations = [...cardAnimations]
+				updatedAnimations.splice(index, 1) // Supprimez l'animation de la carte supprimée
+				setCardAnimations(updatedAnimations)
 			}
-		} else if (gestureState.dx < -20) {
+		} else if (gestureState.dx < -100) {
 			// Glissé vers la gauche
-			const prevColumnIndex = indexOfColumn - 1;
+			const prevColumnIndex = indexOfColumn - 1
 			if (prevColumnIndex >= 0) {
 				// Vérifiez si la colonne précédente existe
-				const prevColumn = currentBoard.columns[prevColumnIndex];
+				const prevColumn = currentBoard.columns[prevColumnIndex]
 				// Déplacez la tâche vers la colonne précédente
-				prevColumn.tasks.push(column.tasks[index]);
-				setCardAnimations([...cardAnimations, new Animated.Value(0)]);
-				column.tasks.splice(index, 1);
-				currentBoard.save(); // Assurez-vous de sauvegarder les modifications
+				prevColumn.tasks.push(column.tasks[index])
+				setCardAnimations([...cardAnimations, new Animated.Value(0)])
+				column.tasks.splice(index, 1)
+				currentBoard.save() // Assurez-vous de sauvegarder les modifications
 
 				// Mettez à jour cardAnimations pour refléter les changements
-				const updatedAnimations = [...cardAnimations];
-				updatedAnimations.splice(index, 1); // Supprimez l'animation de la carte supprimée
-				setCardAnimations(updatedAnimations);
+				const updatedAnimations = [...cardAnimations]
+				updatedAnimations.splice(index, 1) // Supprimez l'animation de la carte supprimée
+				setCardAnimations(updatedAnimations)
 			}
 		} else {
 			// Réinitialisez la carte à sa position initiale
 			Animated.spring(cardAnimations[index], {
 				toValue: 0,
 				useNativeDriver: false,
-			}).start();
+			}).start()
 		}
 	}
 
 	function delcol() {
-		currentBoard.deleteColumn(column);
-		openModal();
+		currentBoard.deleteColumn(column)
+		openModal()
 	}
 
 	function handleEditColumnName() {
 		if (isEditingColumnName) {
 			// Mettez ici la logique pour enregistrer le nouveau nom du tableau.
-			column.name = columnName;
-			currentBoard.save();
+			column.name = columnName
+			currentBoard.save()
 		}
-		setIsEditingColumnName(!isEditingColumnName);
+		setIsEditingColumnName(!isEditingColumnName)
 	}
 
 	return (
@@ -161,15 +161,7 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 						<TouchableOpacity onPress={handleEditColumnName}>
 							{isEditingColumnName ? (
 								<View style={styles.containerEditColumnName}>
-									<TextInput
-										style={styles.input}
-										placeholder="Nom de la column"
-										value={columnName}
-										onChangeText={(text) => setColumnName(text)}
-										autoFocus
-										onBlur={handleEditColumnName}
-										onSubmitEditing={handleEditColumnName}
-									/>
+									<TextInput style={styles.input} placeholder="Nom de la column" value={columnName} onChangeText={(text) => setColumnName(text)} autoFocus onBlur={handleEditColumnName} onSubmitEditing={handleEditColumnName} />
 									<Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
 								</View>
 							) : (
@@ -188,11 +180,11 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 									onMoveShouldSetPanResponder: () => !isSwiping,
 									onPanResponderMove: Animated.event([null, { dx: cardAnimations[index] }], { useNativeDriver: false }),
 									onPanResponderRelease: (e, gestureState) => {
-										handleCardSwipe(index, gestureState);
+										handleCardSwipe(index, gestureState)
 									},
-								});
+								})
 
-								let cardStyle; // Déplacez la déclaration ici
+								let cardStyle // Déplacez la déclaration ici
 
 								if (index >= 0 && index < cardAnimations.length) {
 									cardStyle = {
@@ -200,8 +192,8 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 										opacity: cardAnimations[index].interpolate({
 											inputRange: [-100, 100], // Changez 0 en -20 pour inclure les gestes vers la gauche
 											outputRange: [1, 0.5],
-										  }),
-									};
+										}),
+									}
 								}
 
 								return (
@@ -209,7 +201,7 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 										<TouchableOpacity
 											onPress={() => {
 												if (!isSwiping) {
-													handelPress(task);
+													handelPress(task)
 												}
 											}}
 										>
@@ -217,7 +209,7 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 											<Text style={styles.textCardDescription}>{task.name}</Text>
 										</TouchableOpacity>
 									</Animated.View>
-								);
+								)
 						  })
 						: null}
 
@@ -225,15 +217,7 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 						<TouchableOpacity onPress={createCard}>
 							{inputCreateCard ? (
 								<View style={styles.containerAddCard}>
-									<TextInput
-										style={styles.input}
-										placeholder="Nom de la carte"
-										value={cardName}
-										onChangeText={(text) => setCardName(text)}
-										autoFocus
-										onBlur={createCard}
-										onSubmitEditing={createCard}
-									/>
+									<TextInput style={styles.input} placeholder="Nom de la carte" value={cardName} onChangeText={(text) => setCardName(text)} autoFocus onBlur={createCard} onSubmitEditing={createCard} />
 									<Image style={styles.imageSend} source={require("../../assets/imgs/ValidateBlue.png")} />
 								</View>
 							) : (
@@ -260,8 +244,8 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 				</View>
 			) : null}
 		</View>
-	);
-};
+	)
+}
 
 const styles = StyleSheet.create({
 	scrollView: {
@@ -345,4 +329,4 @@ const styles = StyleSheet.create({
 		marginBottom: 32,
 		color: "#fcfcfc",
 	},
-});
+})

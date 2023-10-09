@@ -3,11 +3,7 @@ import React, { useState } from "react";
 
 export default function HeaderNav({ currentBoard, setModalVisible, modalVisible }) {
   const [isEditingBoardName, setIsEditingBoardName] = useState(false);
-  const [boardName, setBoardName] = useState(null);
-
-
-
-
+  const [boardName, setBoardName] = useState(currentBoard.name);
 
 
   const openModal = () => {
@@ -16,16 +12,18 @@ export default function HeaderNav({ currentBoard, setModalVisible, modalVisible 
 
   function handleEditBoardName() {
     if (isEditingBoardName) {
-      // Mettez ici la logique pour enregistrer le nouveau nom du tableau.
-      currentBoard.name = boardName;
-      currentBoard.save()
+      if (boardName.trim() !== "") {
+       
+        currentBoard.name = boardName;
+        currentBoard.save();
+      } else {
+       
+      }
       setBoardName("");
       setIsEditingBoardName(false);
     } else {
-      setIsEditingBoardName(true)
+      setIsEditingBoardName(true);
     }
-
-    setIsEditingBoardName(!isEditingBoardName);
   }
 
   return (
@@ -36,7 +34,7 @@ export default function HeaderNav({ currentBoard, setModalVisible, modalVisible 
             <TextInput
               style={styles.input}
               placeholder="Nom du tableau"
-              value={boardName}
+              value={currentBoard.name}
               onChangeText={(text) => setBoardName(text)}
               autoFocus
               onBlur={handleEditBoardName}

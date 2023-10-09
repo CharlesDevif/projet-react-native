@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Alert, StyleSheet, StatusBar, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { auth } from './api/firebase'
+import { sendEmailVerification } from 'firebase/auth'
 import AppContext from './context'
 
 import Profile from './classes/Profile'
@@ -16,6 +18,7 @@ import newTask from './views/newContent/newTask'
 import AppNavigator from './components/AppTabNavigator'
 import Loader from './components/Loader'
 import modifTask from './views/newContent/modifTask'
+import { Button } from './components/layout'
 
 
 
@@ -28,9 +31,24 @@ export default () => {
   const [currentTask, setCurrentTask] = useState(null)
   const [currentColumn, setCurrentColumn] = useState(null)
 
+  async function sendConfirmEmail() {
+    await sendEmailVerification(firebaseUser)
+    Alert.alert('Email envoyé')
+  }
+
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+	
+
   useEffect(() => {                                 // sans ça react fait une boucle infini
-    auth.onAuthStateChanged(async user => {         // détection des changement de connexion
+    auth.onAuthStateChanged(user => {         // détection des changement de connexion
       if (user) {
+        if (user && user.emailVerified) {
+          setIsEmailVerified(true)
+        } else {
+          setIsEmailVerified(false)
+        }
+
         setFirebaseUser(user)                       // récupération du firebaseUser
         Profile.listenById(user.uid, res => {       // récupération du profile
           setProfile(res)
@@ -44,20 +62,32 @@ export default () => {
     })
   }, [])
 
-  return (
-    <AppContext.Provider value={{
-      auth, firebaseUser,
-      profile, setProfile,
-      boards, setBoards,
-      currentBoard, setCurrentBoard,
-      currentColumn, setCurrentColumn,
-      currentTask, setCurrentTask
-    }}>
-      <NavigationContainer>
-        { loading ? <Loader /> : profile ? isAuth : notAuth }
-      </NavigationContainer>
-    </AppContext.Provider>
-  )
+ 
+
+  if (firebaseUser && !isEmailVerified) {
+    return (
+      <View style={styles.container}>
+        <Text>Vous n'avez pas encore vérifié votre email.</Text>
+        <Button outlined onClick={sendConfirmEmail}>Renvoyer un email</Button>
+        <Button onClick={() => auth.signOut()}>Déconnexion</Button>
+      </View>
+    )
+  } else {
+    return (
+      <AppContext.Provider value={{
+        auth, firebaseUser,
+        profile, setProfile,
+        boards, setBoards,
+        currentBoard, setCurrentBoard,
+        currentColumn, setCurrentColumn,
+        currentTask, setCurrentTask
+      }}>
+        <NavigationContainer>
+          { loading ? <Loader /> : profile ? isAuth : notAuth }
+        </NavigationContainer>
+      </AppContext.Provider>
+    )
+  }
 }
 
 const Stack = createStackNavigator()
@@ -76,3 +106,14 @@ const isAuth =
   <Stack.Screen name="newTask" component={newTask} options={{ title: 'Nouvelle Tâche' }} />
   <Stack.Screen name="modifTask" component={modifTask} options={{ title: 'Modif Tâche', headerShown: false }}  />
 </AppStack.Navigator>
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		gap: 16,
+		alignItems: "center",
+		justifyContent: "center",
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+		backgroundColor: "#171b1e",
+	}
+})

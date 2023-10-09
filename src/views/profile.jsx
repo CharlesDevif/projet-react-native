@@ -11,9 +11,9 @@ export default () => {
     auth.signOut()
   }
 
-  function deleteAccount() {
-    profile.delete()
-    firebaseUser.delete()
+  async function deleteAccount() {
+    await profile.delete()
+    await firebaseUser.delete()
     auth.signOut()
   }
 
