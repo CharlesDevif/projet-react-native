@@ -22,6 +22,7 @@ import { Button } from './components/layout'
 
 
 
+
 export default () => {
   const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState(null)
@@ -37,6 +38,9 @@ export default () => {
   }
 
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+
+ 
 
 	
 
@@ -67,9 +71,10 @@ export default () => {
   if (firebaseUser && !isEmailVerified) {
     return (
       <View style={styles.container}>
-        <Text>Vous n'avez pas encore vérifié votre email.</Text>
-        <Button outlined onClick={sendConfirmEmail}>Renvoyer un email</Button>
-        <Button onClick={() => auth.signOut()}>Déconnexion</Button>
+        <Text style={styles.text}>Vous n'avez pas encore vérifié votre email.</Text>
+        <Button basique outlined onClick={sendConfirmEmail}>Renvoyer un email</Button>
+        <Button basique onClick={() => auth.signOut()}>j'ai vérifié mon email !</Button>
+       
       </View>
     )
   } else {
@@ -115,5 +120,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 		backgroundColor: "#171b1e",
-	}
+	},
+  text: {
+		fontSize: 16,
+		color: "#fcfcfc",
+	},
 })
