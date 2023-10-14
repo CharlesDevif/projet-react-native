@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal } from "react-native"
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, TextInput, Modal, Alert } from "react-native"
 import AppContext from "../../context/index"
 import * as ImagePicker from "expo-image-picker"
 import { app } from "../../api/firebase"
@@ -146,9 +146,16 @@ export default ({ currentBoard, column, indexOfColumn }) => {
 
 	function handleEditColumnName() {
 		if (isEditingColumnName) {
+			setColumnName(column.name)
 			// Mettez ici la logique pour enregistrer le nouveau nom du tableau.
-			column.name = columnName
-			currentBoard.save()
+			if (columnName) {
+				column.name = columnName
+				currentBoard.save()
+				
+			}else{
+				Alert.alert('Le nom de la colonne ne peux etre null')
+			}
+			
 		}
 		setIsEditingColumnName(!isEditingColumnName)
 	}
